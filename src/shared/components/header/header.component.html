@@ -1,0 +1,33 @@
+<mat-toolbar class="toolbar bg-dark text-white">
+  <img routerLink="" class="ml-2" ngSrc="assets/images/logoNoBG.png" width="142" height="45" priority  >
+  <span class="example-spacer"></span>
+    <div class="col-md-5 mx-auto">
+      <div class="input-group">
+        <input class="searcher form-control border rounded-pill" type="search" value="" placeholder="Find more Angles!..." id="searcher">
+        <button mat-icon-button appMouseEnter>
+          <mat-icon>search</mat-icon>
+        </button>
+      </div>
+    </div>
+  <button [matMenuTriggerFor]="menu" appMouseEnter mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+    <mat-icon>menu</mat-icon>
+  </button>
+    <mat-menu #menu = "matMenu">
+      <button routerLink="/signin" appMouseEnter mat-menu-item *ngIf="!loggedIn">
+        <mat-icon>dialpad</mat-icon>
+        <span>Sign In</span>
+      </button>
+      <button routerLink="/signup" appMouseEnter mat-menu-item *ngIf="!loggedIn">
+        <mat-icon>voicemail</mat-icon>
+        <span>Sign up</span>
+      </button>
+      <button routerLink="/myChannel" appMouseEnter mat-menu-item *ngIf="loggedIn">
+        <mat-icon>notifications_off</mat-icon>
+        <span>My Channel</span>
+      </button>
+      <button routerLink="/settings" appMouseEnter mat-menu-item *ngIf="loggedIn">
+        <mat-icon>notifications_off</mat-icon>
+        <span>Settings</span>
+      </button>
+    </mat-menu>
+</mat-toolbar>
