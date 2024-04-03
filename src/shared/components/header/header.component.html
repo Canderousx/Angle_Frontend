@@ -21,13 +21,17 @@
         <mat-icon>voicemail</mat-icon>
         <span>Sign up</span>
       </button>
-      <button routerLink="/myChannel" appMouseEnter mat-menu-item *ngIf="loggedIn">
+      <button (click)="myChannel()" appMouseEnter mat-menu-item *ngIf="loggedIn">
         <mat-icon>notifications_off</mat-icon>
         <span>My Channel</span>
       </button>
       <button routerLink="/settings" appMouseEnter mat-menu-item *ngIf="loggedIn">
         <mat-icon>notifications_off</mat-icon>
         <span>Settings</span>
+      </button>
+      <button (click)="logout()" appMouseEnter mat-menu-item *ngIf="loggedIn">
+        <mat-icon>notifications_off</mat-icon>
+        <span>Logout</span>
       </button>
     </mat-menu>
 </mat-toolbar>

@@ -7,6 +7,7 @@ import {AlertComponent} from "../shared/components/alert/alert.component";
 import {NgIf} from "@angular/common";
 import {GlobalMessengerService} from "../shared/services/global-messenger.service";
 import {fadeInOut} from "../shared/animations/fadeInOut";
+import {AuthenticationService} from "../shared/services/authentication.service";
 
 
 export interface serverResponse{
@@ -21,13 +22,26 @@ export interface serverResponse{
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit{
-  constructor(private global: GlobalMessengerService) {
+  constructor(private global: GlobalMessengerService,
+              private auth: AuthenticationService) {
   }
-  title = 'Angle';
-  loggedIn = new BehaviorSubject(false);
+  loggedIn = false;
+  title = 'Angle - Between the Thoughts!';
   alert: string[] = [];
 
+  checkAuth(){
+    if(sessionStorage.getItem("authToken")){
+      this.auth.loggedIn.next(true);
+    }
+  }
+
   ngOnInit() {
+    this.checkAuth();
+    this.auth.loggedIn.subscribe({
+      next: value => {
+        this.loggedIn = value;
+      }
+    })
     this.global.toastMessage.subscribe({
       next: value => {
         this.alert = value;
