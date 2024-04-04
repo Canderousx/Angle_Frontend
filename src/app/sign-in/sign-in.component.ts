@@ -44,6 +44,7 @@ export class SignInComponent {
         next: value => {
           sessionStorage.setItem("authToken",value.authToken)
           this.authService.loggedIn.next(true);
+          this.authService.getCurrentUser();
           this.global.toastMessage.next(["alert-primary","You've been logged in! Welcome to the Angle!"])
           this.router.navigate([''])
         },

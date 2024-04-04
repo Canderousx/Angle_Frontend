@@ -1,1 +1,6 @@
-<p>channel works!</p>
+<mat-tab-group *ngIf="channelUser">
+  <mat-tab label="Main Page"><app-channel-main-page [channelAccount]="channelUser"></app-channel-main-page></mat-tab>
+  <mat-tab label="Videos"><app-channel-videos></app-channel-videos></mat-tab>
+  <mat-tab label="Misc"><app-channel-misc></app-channel-misc></mat-tab>
+</mat-tab-group>
+
