@@ -2,3 +2,15 @@
   display: flex;
   justify-content: space-between;
 }
+
+.tButton{
+  color: whitesmoke;
+  margin: 0;
+  padding: 0;
+  max-width: 2%;
+  min-width: 2%;
+  min-height: 55%;
+  max-height: 55%;
+  background: transparent;
+  border: none;
+}
