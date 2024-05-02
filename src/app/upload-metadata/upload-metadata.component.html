@@ -1,0 +1,43 @@
+<div *ngIf="thumbnails.length > 0" class="metaData-window d-flex flex-column justify-content-center align-items-center align-content-center mt-5 w-100">
+  <h1 class="font-monospace">{{partialH1}}</h1>
+  <form (submit)="submit()" [formGroup]="metaData" class="d-flex flex-row justify-content-xl-around align-content-center align-items-center">
+    <div class="text-form d-flex flex-column justify-content-evenly">
+      <div class="mb-3 d-flex flex-column justify-content-center align-items-center align-content-center">
+        <input id="title" class="form-control" type="text" name="name" placeholder="Video title" matInput [formControl]="metaData.controls.name">
+        <span @fadeInOut class="error" *ngIf="metaData.controls.name.hasError('required') && metaData.controls.name.touched">
+        Video title is required</span>
+      </div>
+      <div class="mb-3 d-flex flex-column justify-content-center align-items-center align-content-center">
+        <input id="desc" placeholder="Description..." class="form-control description" type="text" name="name" matInput [formControl]="metaData.controls.description">
+        <span @fadeInOut class="error" *ngIf="metaData.controls.description.hasError('required') && metaData.controls.description.touched">
+        Description is required</span>
+      </div>
+      <div class="mb-3 d-flex flex-column justify-content-center align-items-center align-content-center">
+        <label for="tags" class="form-label">Tags</label>
+        <input id="tags" placeholder="Seperate each tag with ','" class="form-control description" type="text" name="name" matInput [formControl]="metaData.controls.tags">
+        <span @fadeInOut class="error" *ngIf="metaData.controls.tags.hasError('required') && metaData.controls.tags.touched">
+        At least a single tag is required</span>
+      </div>
+    </div>
+    <mat-radio-group class="thumbnails d-flex flex-row justify-content-evenly align-items-center align-content-center mt-5" [formControl]="metaData.controls.thumbnail">
+      <div *ngFor="let thumbnail of thumbnails, index as i" class="d-flex flex-column justify-content-center align-content-center align-items-center">
+        <img class="img-thumbnail" [ngClass]="{selected: metaData.controls.thumbnail.value === thumbnail.content}" (click)="selectThumbnail(thumbnail.content)" src="{{thumbnail.content | base64Image}}"
+        [matTooltip]="'Select a thumbnail'">
+        <mat-radio-button [value]="thumbnail.content"></mat-radio-button>
+      </div>
+    </mat-radio-group>
+    <button type="submit" [disabled]="metaData.invalid" class="btn btn-primary mt-5"
+            matTooltip="Save Your Angle!"
+            >Save</button>
+  </form>
+</div>
+
+
+
+<ng-container *ngIf="thumbnails.length === 0">
+  <div class="font-monospace mt-5 d-flex flex-column justify-content-center align-content-center align-items-center">
+    <h1>Almost done...</h1>
+    <h5>Generating thumbnails...</h5>
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-container>

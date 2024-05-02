@@ -1,0 +1,14 @@
+<div *ngIf="video && author" class="watcher justify-content-around align-items-center align-content-center m-5">
+  <div class="player w-75 h-25">
+    <app-video-player [videoId]="videoId" [videoURL]="videoURL"></app-video-player>
+  </div>
+  <div class="video-metadata">
+    <div class="video-stats d-flex flex-row justify-content-between w-75">
+      <h2>{{video.name}}</h2>
+      <h2>{{video.views+" views"}}</h2>
+    </div>
+
+    <h3 (click)="authorPage()" style="cursor: pointer"><img class="avatar avatar-sm" src="{{author.avatar | base64Image}}">{{author.username}}
+    <button class="btn btn-primary btn-sm btn-subscribe">Subscribe!</button></h3>
+  </div>
+</div>

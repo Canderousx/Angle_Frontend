@@ -1,0 +1,12 @@
+img{
+  width: 200px;
+  height: auto;
+  cursor: pointer;
+}
+h1{
+  min-height: 50px;
+}
+.btn{
+  min-height: 10%;
+  min-width: 40%;
+}

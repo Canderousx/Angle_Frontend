@@ -1,0 +1,14 @@
+<div class="latestFeed">
+  <div class="videoMiniature m-4" *ngFor="let video of videosList, index as i">
+    <img (click)="watch(video.id)" class="img-thumbnail" src="{{video.thumbnail | base64Image}}">
+    <h4 class="video-title d-flex justify-content-center align-content-center align-items-center flex-row">
+      {{video.name | rowcut:35}}</h4>
+    <h5 class="video-data text-center">{{video.views+" views"}}</h5>
+    <h5 class="text-center">
+      <img class="avatar avatar-sm" src="{{video.authorAvatar | base64Image}}">
+    </h5>
+    <h5 class="text-center">
+      {{video.datePublished}}
+    </h5>
+  </div>
+</div>
