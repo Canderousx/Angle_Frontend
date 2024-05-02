@@ -3,11 +3,13 @@ import {inject} from "@angular/core";
 import {AuthenticationService} from "../services/authentication.service";
 import {catchError} from "rxjs";
 import {GlobalMessengerService} from "../services/global-messenger.service";
+import {Router} from "@angular/router";
 
 export const authInterceptorInterceptor: HttpInterceptorFn = (req, next) => {
   let authService = inject(AuthenticationService);
   let global = inject(GlobalMessengerService);
   let loggedIn = !!sessionStorage.getItem("authToken");
+  let router = inject(Router)
   if(loggedIn) {
     const authToken = sessionStorage.getItem("authToken");
     const authReq = req.clone({
@@ -15,9 +17,12 @@ export const authInterceptorInterceptor: HttpInterceptorFn = (req, next) => {
     });
     return next(authReq).pipe(
       catchError((err: HttpErrorResponse) =>{
-        if(err.status === 666){
+        console.log("CAUGHT ERROR: "+err.status)
+        if(err.status === 401){
+          sessionStorage.removeItem("authToken");
           authService.loggedIn.next(false);
-          global.toastMessage.next(['alert-warning',"Your session has expired. Please sign in"])
+          global.toastMessage.next(['alert-primary',"Your session has expired. Please sign in!"])
+          router.navigate(["/signin"])
 
         }
         throw err;

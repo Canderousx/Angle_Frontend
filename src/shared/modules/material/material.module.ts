@@ -6,6 +6,11 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {MatMenuModule} from "@angular/material/menu";
 import {MatTabsModule} from "@angular/material/tabs";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {MatRippleModule} from "@angular/material/core";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatRadioModule} from "@angular/material/radio";
+import {MatCardModule} from "@angular/material/card";
 
 
 
@@ -22,7 +27,12 @@ import {MatTabsModule} from "@angular/material/tabs";
     MatButtonModule,
     NgOptimizedImage,
     MatMenuModule,
-    MatTabsModule
+    MatTabsModule,
+    MatProgressBarModule,
+    MatRippleModule,
+    MatTooltipModule,
+    MatRadioModule,
+    MatCardModule
   ]
 })
 export class MaterialModule { }

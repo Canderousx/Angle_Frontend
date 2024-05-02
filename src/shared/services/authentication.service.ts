@@ -13,7 +13,8 @@ export interface accountRes{
   username: string,
   email: string,
   subscribers: number,
-  subscribedIds: string[]
+  subscribedIds: string[],
+  avatar: string,
 }
 
 @Injectable({
@@ -43,7 +44,8 @@ export class AuthenticationService {
       username: '',
       email: '',
       subscribers: 0,
-      subscribedIds: []
+      subscribedIds: [],
+      avatar: '',
     };
     this.currentUser.next(this.loggedUser);
     this.loggedIn.next(false);

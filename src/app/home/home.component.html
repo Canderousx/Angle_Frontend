@@ -1,1 +1,10 @@
-<p>home works!</p>
+<div class="homeWindow d-flex flex-column justify-content-center align-items-center align-content-center">
+  <ng-container *ngIf="loggedIn">
+    <h2 class="text-center">Recommended for You</h2>
+    <div class="recommendedFeed">
+
+    </div>
+  </ng-container>
+  <h2>Latest Angles</h2>
+  <app-feed [videosList]="latestVideos"></app-feed>
+</div>

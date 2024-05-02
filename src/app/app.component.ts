@@ -47,7 +47,7 @@ export class AppComponent implements OnInit{
         this.alert = value;
         setTimeout(() =>{
           this.alert = [];
-        }, 2500)
+        }, 5500)
       }
     })
 
