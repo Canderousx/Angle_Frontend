@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatInput} from "@angular/material/input";
 import {NgIf} from "@angular/common";
@@ -12,6 +12,7 @@ import {serverResponse} from "../app.component";
 import {Router} from "@angular/router";
 import {error} from "@angular/compiler-cli/src/transformers/util";
 import {UsernameValidatorService} from "../../shared/validators/UsernameValidatorService";
+import {Title} from "@angular/platform-browser";
 
 export interface signUpReq{
   username: string,
@@ -34,11 +35,16 @@ export interface signUpReq{
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.css'
 })
-export class SignUpComponent {
+export class SignUpComponent implements OnInit{
   constructor(private http: HttpClient,
               private global: GlobalMessengerService,
               private router: Router,
-              private usernameValidator: UsernameValidatorService) {
+              private usernameValidator: UsernameValidatorService,
+              private titleService: Title) {
+  }
+
+  ngOnInit() {
+    this.titleService.setTitle("Sign Up to Angle!")
   }
 
   signForm = new FormGroup({

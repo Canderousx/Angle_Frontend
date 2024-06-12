@@ -1,0 +1,42 @@
+.btn{
+  border-radius: 50px;
+}
+
+.video-btn{
+  background: none;
+  border: none;
+}
+
+.like-btn{
+  background: rgb(42, 38, 38,0.1);
+  border-radius: 50px;
+  padding: 8px;
+}
+
+.video-description{
+  background: rgb(42, 38, 38,0.1);
+  border-radius: 5px;
+  padding: 8px
+
+}
+
+.short{
+  height: 3vh;
+}
+
+.expanded{
+  max-height: none;
+}
+
+/*.description span{*/
+/*  height: 90%;*/
+/*}*/
+
+.watcher{
+  width: 65%;
+}
+
+.watch-window{
+  margin-top: 2%;
+}
+

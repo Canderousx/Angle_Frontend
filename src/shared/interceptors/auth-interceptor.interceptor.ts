@@ -3,7 +3,7 @@ import {inject} from "@angular/core";
 import {AuthenticationService} from "../services/authentication.service";
 import {catchError} from "rxjs";
 import {GlobalMessengerService} from "../services/global-messenger.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 export const authInterceptorInterceptor: HttpInterceptorFn = (req, next) => {
   let authService = inject(AuthenticationService);
@@ -22,6 +22,7 @@ export const authInterceptorInterceptor: HttpInterceptorFn = (req, next) => {
           sessionStorage.removeItem("authToken");
           authService.loggedIn.next(false);
           global.toastMessage.next(['alert-primary',"Your session has expired. Please sign in!"])
+          sessionStorage.setItem("prevURL",router.url)
           router.navigate(["/signin"])
 
         }

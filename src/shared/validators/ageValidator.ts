@@ -14,7 +14,7 @@ export function ageValidator(control: AbstractControl): {[key:string]:any} | nul
     age--;
   }
   console.log("AGE: "+age);
-  if(age >= 18){
+  if(age >= 13){
     return null;
   }
   return {"tooYoung": {value: age}}

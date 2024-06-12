@@ -58,14 +58,14 @@ export class AuthenticationService {
     this.http.get<accountRes>(environment.backendUrl+"/auth/getCurrentUser")
       .subscribe({
         next: value => {
-          this.loggedUser = value;
-          this.currentUser.next(this.loggedUser);
+          this.currentUser.next(value);
         }
       });
+
   }
 
   getUser(id: string){
-    return this.http.get<accountRes>(environment.backendUrl+"/auth/getUserById?id="+id)
+    return this.http.get<accountRes>(environment.backendUrl+"/unAuth/videos/getUserById?id="+id)
   }
 
 

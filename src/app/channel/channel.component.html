@@ -1,6 +1,28 @@
-<mat-tab-group *ngIf="channelUser">
-  <mat-tab label="Main Page"><app-channel-main-page [channelAccount]="channelUser"></app-channel-main-page></mat-tab>
-  <mat-tab label="Videos"><app-channel-videos></app-channel-videos></mat-tab>
-  <mat-tab label="Misc"><app-channel-misc></app-channel-misc></mat-tab>
-</mat-tab-group>
+<!--<div class="d-flex flex-row justify-content-center w-100" *ngIf="channelUser">-->
+<!--  <mat-tab-group class="w-100">-->
+<!--    <mat-tab label="Main Page"><app-channel-main-page [channelAccount]="channelUser"></app-channel-main-page></mat-tab>-->
+<!--    <mat-tab label="Videos"><app-channel-videos></app-channel-videos></mat-tab>-->
+<!--    <mat-tab label="Misc"><app-channel-misc></app-channel-misc></mat-tab>-->
+<!--  </mat-tab-group>-->
+<!--</div>-->
+<div class="d-flex flex-column w-100 p-5 justify-content-center align-content-center align-items-center" *ngIf="channelUser">
+  <div class="profile-card d-flex flex-row justify-content-center align-items-center align-content-start mt-5 w-75">
+    <div class="avatar-container mx-2">
+      <img class="avatar avatar-med" src="{{channelUser.avatar | base64Image}}">
+    </div>
+    <div class="d-flex flex-column justify-content-center align-content-center align-items-start">
+      <span class="my-2"><b>{{channelUser.username}}</b></span>
+      <span>{{channelUser.subscribers}} subscribers</span>
+      <button (click)="videosManager()" *ngIf="ownChannel" class="btn btn-primary btn-sm">Videos Manager</button>
+      <button *ngIf="!ownChannel" class="btn btn-primary">Subscribe!</button>
+    </div>
+  </div>
+  <div class="mt-3">
+    <mat-divider></mat-divider>
+    <app-feed [videosList]="channelVideos" [flexDirection]="'flex-row'" [mainClass]="'videoMiniature-home'"></app-feed>
+  </div>
+  <button *ngIf="channelVideos.length < totalVideos" class="btn btn-primary btn-sm">Load more</button>
+</div>
+
+
 

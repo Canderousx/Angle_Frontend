@@ -1,35 +1,106 @@
-<div *ngIf="thumbnails.length > 0" class="metaData-window d-flex flex-column justify-content-center align-items-center align-content-center mt-5 w-100">
-  <h1 class="font-monospace">{{partialH1}}</h1>
-  <form (submit)="submit()" [formGroup]="metaData" class="d-flex flex-row justify-content-xl-around align-content-center align-items-center">
-    <div class="text-form d-flex flex-column justify-content-evenly">
-      <div class="mb-3 d-flex flex-column justify-content-center align-items-center align-content-center">
-        <input id="title" class="form-control" type="text" name="name" placeholder="Video title" matInput [formControl]="metaData.controls.name">
-        <span @fadeInOut class="error" *ngIf="metaData.controls.name.hasError('required') && metaData.controls.name.touched">
-        Video title is required</span>
-      </div>
-      <div class="mb-3 d-flex flex-column justify-content-center align-items-center align-content-center">
-        <input id="desc" placeholder="Description..." class="form-control description" type="text" name="name" matInput [formControl]="metaData.controls.description">
-        <span @fadeInOut class="error" *ngIf="metaData.controls.description.hasError('required') && metaData.controls.description.touched">
-        Description is required</span>
-      </div>
-      <div class="mb-3 d-flex flex-column justify-content-center align-items-center align-content-center">
-        <label for="tags" class="form-label">Tags</label>
-        <input id="tags" placeholder="Seperate each tag with ','" class="form-control description" type="text" name="name" matInput [formControl]="metaData.controls.tags">
-        <span @fadeInOut class="error" *ngIf="metaData.controls.tags.hasError('required') && metaData.controls.tags.touched">
-        At least a single tag is required</span>
-      </div>
-    </div>
-    <mat-radio-group class="thumbnails d-flex flex-row justify-content-evenly align-items-center align-content-center mt-5" [formControl]="metaData.controls.thumbnail">
-      <div *ngFor="let thumbnail of thumbnails, index as i" class="d-flex flex-column justify-content-center align-content-center align-items-center">
-        <img class="img-thumbnail" [ngClass]="{selected: metaData.controls.thumbnail.value === thumbnail.content}" (click)="selectThumbnail(thumbnail.content)" src="{{thumbnail.content | base64Image}}"
-        [matTooltip]="'Select a thumbnail'">
-        <mat-radio-button [value]="thumbnail.content"></mat-radio-button>
-      </div>
-    </mat-radio-group>
-    <button type="submit" [disabled]="metaData.invalid" class="btn btn-primary mt-5"
-            matTooltip="Save Your Angle!"
-            >Save</button>
-  </form>
+<div *ngIf="thumbnails.length > 0" class="metaData-window d-flex flex-column justify-content-start align-items-center align-content-start mt-5 vh-100">
+<!--  <form (submit)="submit()" [formGroup]="metaData" class="d-flex flex-column justify-content-center align-content-center align-items-center">-->
+<!--    <div class="text-form d-flex flex-row justify-content-center align-content-center align-items-center">-->
+<!--      <div class="d-flex flex-column">-->
+<!--        <div class=" d-flex flex-column justify-content-center align-items-center align-content-center">-->
+<!--          <input id="title" class="form-control w-100 my-2" type="text" name="name" placeholder="Video title" matInput [formControl]="metaData.controls.name">-->
+<!--          <span @fadeInOut class="error" *ngIf="metaData.controls.name.hasError('required') && metaData.controls.name.touched">-->
+<!--        Video title is required</span>-->
+<!--        </div>-->
+<!--        <mat-divider></mat-divider>-->
+<!--        <div class=" d-flex flex-column justify-content-center align-items-center align-content-center">-->
+<!--                    <span @fadeInOut class="error" *ngIf="metaData.controls.description.hasError('required') && metaData.controls.description.touched">-->
+<!--        Description is required</span>-->
+<!--          <textarea id="desc" placeholder="Description..." class="form-control description" name="description" matInput [formControl]="metaData.controls.description" rows="5" cols="45"></textarea>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <mat-divider></mat-divider>-->
+<!--      <div class="d-flex flex-column justify-content-start align-items-center align-content-center mx-5">-->
+<!--&lt;!&ndash;        <label for="tags" class="form-label">Tags</label>&ndash;&gt;-->
+<!--        <textarea id="tags" placeholder="Video tags. Seperate each tag with ','" class="form-control description" type="text" name="name" matInput [formControl]="metaData.controls.tags" rows="5" cols="45"></textarea>-->
+<!--        <span @fadeInOut class="error" *ngIf="metaData.controls.tags.hasError('required') && metaData.controls.tags.touched">-->
+<!--        At least a single tag is required</span>-->
+<!--      </div>-->
+<!--      <mat-divider></mat-divider>-->
+<!--    </div>-->
+
+<!--    <mat-radio-group class="thumbnails d-flex flex-row justify-content-evenly align-items-center align-content-center mt-2" [formControl]="metaData.controls.thumbnail">-->
+<!--      <div *ngFor="let thumbnail of thumbnails, index as i" class="d-flex flex-column justify-content-between align-content-center align-items-center">-->
+<!--        <img class="img-thumbnail scalable" [ngClass]="{selected: metaData.controls.thumbnail.value === thumbnail.content}" (click)="selectThumbnail(thumbnail.content)" src="{{thumbnail.content | base64Image}}"-->
+<!--        [matTooltip]="'Select a thumbnail'">-->
+<!--        <mat-radio-button [value]="thumbnail.content"></mat-radio-button>-->
+<!--      </div>-->
+<!--    </mat-radio-group>-->
+<!--    <button type="submit" [disabled]="metaData.invalid" class="btn btn-primary btn-sm mt-5"-->
+<!--            matTooltip="Save Your Angle!"-->
+<!--            >Save</button>-->
+<!--  </form>-->
+  <mat-stepper [linear]="false" #stepper>
+    <mat-step [stepControl]="metaName">
+      <form class="metadata-control" [formGroup]="metaName">
+        <ng-template matStepLabel>Name Your Video</ng-template>
+        <mat-form-field class="nameInput">
+          <mat-label>Name</mat-label>
+          <input [value]="metaName.controls.name.value" matInput placeholder="Your video name..." formControlName="name" required>
+          <mat-error *ngIf="metaName.get('name')?.hasError('required')">Name is required</mat-error>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="metaDesc">
+      <form class="metadata-control" [formGroup]="metaDesc">
+        <ng-template matStepLabel>Tell us more</ng-template>
+        <mat-form-field>
+          <mat-label>Description</mat-label>
+          <textarea [value]="metaDesc.controls.description.value" style="resize: none" rows="4" matInput placeholder="Tell us more about your video" formControlName="description" required></textarea>
+          <mat-error *ngIf="metaDesc.get('description')?.hasError('required')">Description is required</mat-error>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="metaTags">
+      <form class="metadata-control" [formGroup]="metaTags">
+        <ng-template matStepLabel>Tag Your Video</ng-template>
+        <mat-form-field>
+          <mat-label>Tags</mat-label>
+          <textarea [value]="metaTags.controls.tags.value" style="resize: none" rows="4" matInput placeholder="Separate each tag with ','" formControlName="tags" required></textarea>
+          <mat-error *ngIf="metaTags.get('tags')?.hasError('required')">Tags are required</mat-error>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="metaThumbnail">
+      <form class="metadata-control" [formGroup]="metaThumbnail">
+        <ng-template matStepLabel>Choose a Thumbnail</ng-template>
+        <div class="thumbnails d-flex flex-row justify-content-evenly align-items-center align-content-center">
+          <mat-radio-group class="d-flex flex-row" [formControl]="metaThumbnail.controls.thumbnail" required>
+            <div *ngFor="let thumbnail of thumbnails; index as i" class="d-flex flex-column justify-content-between align-content-center align-items-center">
+              <img class="img-thumbnail scalable mx-1" [ngClass]="{selected: metaThumbnail.controls.thumbnail.value === thumbnail.content}" (click)="selectThumbnail(thumbnail.content)" src="{{thumbnail.content | base64Image}}" [matTooltip]="'Select a thumbnail'">
+              <mat-radio-button [value]="thumbnail.content"></mat-radio-button>
+            </div>
+          </mat-radio-group>
+        </div>
+        <mat-error *ngIf="metaThumbnail.get('thumbnail')?.hasError('required')">Please choose a thumbnail!</mat-error>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button [disabled]="!metaThumbnail.valid || !metaTags.valid || !metaName.valid || !metaDesc.valid" (click)="submit()" mat-button>Save</button>
+        </div>
+      </form>
+    </mat-step>
+  </mat-stepper>
+
 </div>
 
 

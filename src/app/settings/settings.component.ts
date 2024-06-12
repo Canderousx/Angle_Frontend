@@ -7,6 +7,7 @@ import {MaterialModule} from "../../shared/modules/material/material.module";
 import {AvatarChangerService} from "../../shared/services/avatar-changer.service";
 import {AvatarChangeComponent} from "../../shared/components/avatar-change/avatar-change.component";
 import {NgIf} from "@angular/common";
+import {Title} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-settings',
@@ -25,7 +26,8 @@ export class SettingsComponent implements OnInit{
   constructor(private authService: AuthenticationService,
               private global: GlobalMessengerService,
               private avatarChanger: AvatarChangerService,
-              private router: Router) {
+              private router: Router,
+              private titleService: Title,) {
   }
 
   user!: accountRes;
@@ -35,6 +37,7 @@ export class SettingsComponent implements OnInit{
     this.refresh();
   }
   refresh(){
+    this.titleService.setTitle("Account Settings")
     this.authService.getCurrentUser();
     this.authService.currentUser.subscribe({
       next: value => {

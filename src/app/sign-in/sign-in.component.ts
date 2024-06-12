@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MaterialModule} from "../../shared/modules/material/material.module";
 import {MatInput} from "@angular/material/input";
@@ -12,6 +12,7 @@ import {GlobalMessengerService} from "../../shared/services/global-messenger.ser
 import {error} from "@angular/compiler-cli/src/transformers/util";
 import {HttpErrorResponse} from "@angular/common/http";
 import {serverResponse} from "../app.component";
+import {Title} from "@angular/platform-browser";
 
 export interface authRes{
   authToken: string;
@@ -25,11 +26,17 @@ export interface authRes{
   templateUrl: './sign-in.component.html',
   styleUrl: './sign-in.component.css'
 })
-export class SignInComponent {
+export class SignInComponent implements OnInit{
 
   constructor(private authService: AuthenticationService,
               private router: Router,
-              private global: GlobalMessengerService) {
+              private global: GlobalMessengerService,
+              private titleService: Title) {
+  }
+
+  ngOnInit() {
+    this.titleService.setTitle("Angle: Sign In")
+    this.authService.logout();
   }
 
   signForm = new FormGroup({
@@ -46,7 +53,14 @@ export class SignInComponent {
           this.authService.loggedIn.next(true);
           this.authService.getCurrentUser();
           this.global.toastMessage.next(["alert-primary","You've been logged in! Welcome to the Angle!"])
-          this.router.navigate([''])
+          if(!!sessionStorage.getItem("prevURL")){
+            let url = sessionStorage.getItem("prevURL") as string;
+            sessionStorage.removeItem("prevURL")
+            this.router.navigateByUrl(url);
+          }else{
+            this.router.navigate([''])
+          }
+
         },
         error: err =>{
           let error: serverResponse = err.error;

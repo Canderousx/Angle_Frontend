@@ -11,6 +11,10 @@ import {MatRippleModule} from "@angular/material/core";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatCardModule} from "@angular/material/card";
+import {MatDividerModule} from "@angular/material/divider";
+import {MatTableModule} from "@angular/material/table";
+import {MatStepperModule} from "@angular/material/stepper";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
 
 
 
@@ -32,7 +36,11 @@ import {MatCardModule} from "@angular/material/card";
     MatRippleModule,
     MatTooltipModule,
     MatRadioModule,
-    MatCardModule
+    MatCardModule,
+    MatDividerModule,
+    MatTableModule,
+    MatStepperModule,
+    MatAutocompleteModule
   ]
 })
 export class MaterialModule { }

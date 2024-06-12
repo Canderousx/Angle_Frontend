@@ -1,0 +1,8 @@
+<div class="search-window d-flex flex-column justify-content-center align-content-center align-items-center">
+  <div class="search-controls">
+    <span>Results for: <b><i>{{query}}</i></b></span>
+  </div>
+  <div class="search-results">
+    <app-feed [videosList]="results" [mainClass]="'videoMiniature-watch'" [flexDirection]="'flex-column'"></app-feed>
+  </div>
+</div>

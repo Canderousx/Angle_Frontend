@@ -1,4 +1,14 @@
-import {AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {GlobalMessengerService} from "../../shared/services/global-messenger.service";
 import {ActivatedRoute} from "@angular/router";
 import {Subscription} from "rxjs";
@@ -10,6 +20,7 @@ import {VgOverlayPlayModule} from "@videogular/ngx-videogular/overlay-play";
 import {VgBufferingModule} from "@videogular/ngx-videogular/buffering";
 import Hls from 'hls.js';
 import {VgStreamingModule} from "@videogular/ngx-videogular/streaming";
+import {MaterialModule} from "../../shared/modules/material/material.module";
 
 
 @Component({
@@ -21,12 +32,13 @@ import {VgStreamingModule} from "@videogular/ngx-videogular/streaming";
     VgCoreModule,
     VgOverlayPlayModule,
     VgBufferingModule,
-    VgStreamingModule
+    VgStreamingModule,
+    MaterialModule
   ],
   templateUrl: './video-player.component.html',
   styleUrl: './video-player.component.css'
 })
-export class VideoPlayerComponent implements OnInit, OnDestroy, AfterViewInit{
+export class VideoPlayerComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges{
 
   constructor(private global: GlobalMessengerService,
               private activatedRoute: ActivatedRoute) {
@@ -36,6 +48,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy, AfterViewInit{
   @Input()videoId!: string;
   @Input()videoURL!: string;
   videoSub!: Subscription;
+  showPlayer = true;
   api: VgApiService = new VgApiService();
   qualities: BitrateOptions[] = [];
   @ViewChild('media') media: any;
@@ -46,7 +59,42 @@ export class VideoPlayerComponent implements OnInit, OnDestroy, AfterViewInit{
     this.api.getDefaultMedia().subscriptions.loadedMetadata.subscribe(
       this.autoplay.bind(this)
     )
+    if(sessionStorage.getItem("volume")){
+      this.api.volume = +sessionStorage.getItem("volume")!;
+    }
+    this.api.getDefaultMedia().subscriptions.volumeChange.subscribe(
+      this.onVolumeChange.bind(this)
+    );
   }
+
+  onVolumeChange(event: any) {
+    console.log("Volume changed!");
+    sessionStorage.setItem("volume",this.api.volume);
+  }
+
+  qualityChange(event: any) {
+
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes['videoId'] && !changes['videoId'].isFirstChange()){
+      this.setBitrates();
+      this.reloadPlayer();
+    }
+
+  }
+
+  reloadPlayer(){
+    this.showPlayer = false;
+    setTimeout(() => {
+      this.showPlayer = true;
+    }, 50);
+
+  }
+
+  // toggleFullscreen(){
+  //
+  // }
 
   autoplay(){
     console.log("play")
@@ -59,6 +107,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy, AfterViewInit{
       console.log("Error: Couldn't set Bitrates, as qualities is null!")
       return
     }
+    console.log("Qualities loaded")
     for(let bitrate of this.qualities){
       switch (bitrate.label){
         case "1681":
