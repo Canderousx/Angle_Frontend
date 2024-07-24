@@ -60,7 +60,7 @@ export class HeaderComponent implements OnInit{
   }
 
   signin(){
-    sessionStorage.setItem("prevURL",this.router.url);
+    localStorage.setItem("prevURL",this.router.url);
     this.router.navigate(['signin'])
   }
 

@@ -9,11 +9,11 @@
       </div>
       <div class="video-metadata  mb-3 mx-0 mt-0">
         <div class="video-stats d-flex flex-row justify-content-between">
-          <h3 (click)="authorPage()" style="cursor: pointer"><img class="avatar avatar-sm scalable" src="{{author.avatar | base64Image}}">{{author.username}}
-            <button *ngIf="!currentUser || currentUser.id !== video.authorId" class="btn btn-primary mx-1">Subscribe!</button>
+          <h3 style="cursor: pointer"><img (click)="authorPage()" class="avatar avatar-sm scalable" src="{{author.avatar | base64Image}}"><span appMouseEnter (click)="authorPage()" class="mx-1">{{author.username}}</span>
+            <button (click)="subscribe(true)" *ngIf="(!currentUser || currentUser.id !== video.authorId) && !author.subscribed" class="btn btn-primary mx-1">Subscribe!</button>
+            <span (click)="subscribe(false)"  (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()" *ngIf="author.subscribed" class="subscribed mx-1">{{hover ? 'UNSUBSCRIBE' : 'SUBSCRIBED!'}}</span>
             <button (click)="videosManager()" *ngIf="currentUser && currentUser.id === video.authorId" class="btn btn-primary mx-1">Manager</button>
             <button (click)="editVideo()" *ngIf="currentUser && currentUser.id === video.authorId" class="btn btn-success mx-1">Edit Video</button>
-
           </h3>
           <div class="action-buttons d-flex justify-content-end align-items-center align-content-center">
             <div class="like-btn d-flex justify-content-center align-content-center align-items-center mx-1">
@@ -22,8 +22,10 @@
               <button class="video-btn" (click)="rateVideo(false)" [disabled]="!rating && rated" [ngClass]="{'rated': !rating && rated}"  appMouseEnter><mat-icon>thumb_down_alt</mat-icon>{{video.dislikes}}</button>
             </div>
             <div class="like-btn d-flex justify-content-center align-content-center align-items-center mx-1">
-              <button class="video-btn" appMouseEnter><mat-icon>share</mat-icon></button>
-              <span>Share</span>
+              <button class="video-btn d-flex justify-content-center align-content-center align-items-center" appMouseEnter><mat-icon>share</mat-icon><span>Share</span></button>
+            </div>
+            <div class="like-btn d-flex justify-content-center align-content-center align-items-center mx-1">
+              <button (click)="report()" class="video-btn d-flex justify-content-center align-content-center align-items-center" appMouseEnter><mat-icon>flag</mat-icon><span>Report</span></button>
             </div>
           </div>
         </div>

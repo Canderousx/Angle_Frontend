@@ -1,15 +1,22 @@
 import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {videoObj} from "../home/home.component";
 import {environment} from "../../environments/environment.development";
 import {FeedComponent} from "../../shared/components/feed/feed.component";
-
+import {NgForOf} from "@angular/common";
+import {Base64ImagePipe} from "../../shared/pipes/base64-image.pipe";
+import {SimpleDatePipe} from "../../shared/pipes/simple-date.pipe";
+import {MouseEnterDirective} from "../../shared/directives/mouse-enter.directive";
 @Component({
   selector: 'app-search',
   standalone: true,
   imports: [
-    FeedComponent
+    FeedComponent,
+    NgForOf,
+    Base64ImagePipe,
+    SimpleDatePipe,
+    MouseEnterDirective
   ],
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
@@ -17,7 +24,8 @@ import {FeedComponent} from "../../shared/components/feed/feed.component";
 export class SearchComponent implements OnInit{
 
   constructor(private http: HttpClient,
-              private activatedRoute: ActivatedRoute) {
+              private activatedRoute: ActivatedRoute,
+              private router: Router) {
 
   }
 
@@ -50,6 +58,10 @@ export class SearchComponent implements OnInit{
           }
         })
     }
+  }
+
+  watch(id: string){
+    this.router.navigate(["/watch"],{queryParams: {v: id}})
   }
 
 

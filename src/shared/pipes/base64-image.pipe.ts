@@ -10,12 +10,23 @@ export class Base64ImagePipe implements PipeTransform {
     if(!value){
       return 'assets/images/defaultAvatar.png';
     }
-    const matches = value.match(/^data:(.*?);base64,/);
-    if (matches) {
+    const mimeType = this.detectMimeType(value);
+    if(mimeType){
+      return "data:"+mimeType+";base64,"+value;
+    }
       return value;
-    } else {
 
-      return `data:image/png;base64,${value}`;
+  }
+
+  private detectMimeType(base64: string): string | null {
+    if (base64.startsWith('/9j/')) {
+      return 'image/jpeg';
+    } else if (base64.startsWith('UklGR')) {
+      return 'image/webp';
+    } else if (base64.startsWith('iVBORw0KGgo')) {
+      return 'image/png';
+    } else {
+      return null;
     }
   }
 

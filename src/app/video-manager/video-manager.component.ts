@@ -12,11 +12,12 @@ import {MouseEnterDirective} from "../../shared/directives/mouse-enter.directive
 import {serverResponse} from "../app.component";
 import {GlobalMessengerService} from "../../shared/services/global-messenger.service";
 import {Title} from "@angular/platform-browser";
+import {UploadComponent} from "../upload/upload.component";
 
 @Component({
   selector: 'app-video-manager',
   standalone: true,
-  imports: [MaterialModule, NgIf, NgForOf, Base64ImagePipe, SimpleDatePipe, MouseEnterDirective, RouterLink],
+  imports: [MaterialModule, NgIf, NgForOf, Base64ImagePipe, SimpleDatePipe, MouseEnterDirective, RouterLink, UploadComponent],
   templateUrl: './video-manager.component.html',
   styleUrl: './video-manager.component.css'
 })
@@ -27,6 +28,7 @@ export class VideoManagerComponent implements OnInit{
   paramId!: string;
   totalVideos = 0;
   page = 0;
+  pageSize = 10;
 
   constructor(private http: HttpClient,
               private auth: AuthenticationService,
@@ -75,7 +77,7 @@ export class VideoManagerComponent implements OnInit{
       next: params => {
         this.paramId = params['id'];
         if(this.paramId === this.currentUser.id){
-          this.http.get<videoObj[]>(environment.backendUrl+"/unAuth/videos/getUserVideos?id="+this.paramId+"&page="+this.page,{observe:"response"})
+          this.http.get<videoObj[]>(environment.backendUrl+"/unAuth/videos/getUserVideos?id="+this.paramId+"&page="+this.page+"&pageSize="+this.pageSize,{observe:"response"})
             .subscribe({
               next: value => {
                 if(value.headers.get("totalVideos")){

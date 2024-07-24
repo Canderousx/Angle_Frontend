@@ -12,6 +12,10 @@
       <span @fadeInOut class="error" *ngIf="signForm.controls.password.hasError('required') && signForm.controls.password.touched">
         Password is required</span>
     </div>
-    <button [disabled]="signForm.invalid" class="btn btn-primary mt-4" type="submit">Sign In</button>
+    <div class="d-flex flex-column justify-content-center align-items-center">
+      <button [disabled]="signForm.invalid" class="btn btn-primary mt-4" type="submit">Sign In</button>
+      <a class="mt-1" routerLink="/forgotPassword">forgot your password?</a>
+    </div>
+
   </form>
 </div>

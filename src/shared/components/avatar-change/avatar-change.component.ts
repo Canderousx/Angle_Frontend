@@ -54,7 +54,7 @@ export class AvatarChangeComponent {
         },
         error: err => {
           let msg: serverResponse = err.error;
-          this.global.toastMessage.next(["alert-warning","Nie można zmienić avatara: "+msg.message])
+          this.global.toastMessage.next(["alert-warning",msg.message])
         }
       })
 

@@ -7,7 +7,7 @@ import {fadeInOut} from "../../shared/animations/fadeInOut";
 import {ageValidator} from "../../shared/validators/ageValidator";
 import {environment} from "../../environments/environment.development";
 import {AuthenticationService} from "../../shared/services/authentication.service";
-import {Router} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {GlobalMessengerService} from "../../shared/services/global-messenger.service";
 import {error} from "@angular/compiler-cli/src/transformers/util";
 import {HttpErrorResponse} from "@angular/common/http";
@@ -22,7 +22,7 @@ export interface authRes{
   selector: 'app-sign-in',
   standalone: true,
   animations: [fadeInOut],
-  imports: [MaterialModule, MatInput, ReactiveFormsModule, NgIf],
+  imports: [MaterialModule, MatInput, ReactiveFormsModule, NgIf, RouterLink],
   templateUrl: './sign-in.component.html',
   styleUrl: './sign-in.component.css'
 })
@@ -49,13 +49,13 @@ export class SignInComponent implements OnInit{
     password:this.signForm.controls.password.value!})
       .subscribe({
         next: value => {
-          sessionStorage.setItem("authToken",value.authToken)
+          localStorage.setItem("authToken",value.authToken)
           this.authService.loggedIn.next(true);
           this.authService.getCurrentUser();
           this.global.toastMessage.next(["alert-primary","You've been logged in! Welcome to the Angle!"])
-          if(!!sessionStorage.getItem("prevURL")){
-            let url = sessionStorage.getItem("prevURL") as string;
-            sessionStorage.removeItem("prevURL")
+          if(!!localStorage.getItem("prevURL")){
+            let url = localStorage.getItem("prevURL") as string;
+            localStorage.removeItem("prevURL")
             this.router.navigateByUrl(url);
           }else{
             this.router.navigate([''])

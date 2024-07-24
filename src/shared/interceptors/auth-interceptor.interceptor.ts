@@ -8,10 +8,10 @@ import {ActivatedRoute, Router} from "@angular/router";
 export const authInterceptorInterceptor: HttpInterceptorFn = (req, next) => {
   let authService = inject(AuthenticationService);
   let global = inject(GlobalMessengerService);
-  let loggedIn = !!sessionStorage.getItem("authToken");
+  let loggedIn = !!localStorage.getItem("authToken");
   let router = inject(Router)
   if(loggedIn) {
-    const authToken = sessionStorage.getItem("authToken");
+    const authToken = localStorage.getItem("authToken");
     const authReq = req.clone({
       headers: req.headers.set('Authentication', 'Bearer ' + authToken)
     });
@@ -19,10 +19,10 @@ export const authInterceptorInterceptor: HttpInterceptorFn = (req, next) => {
       catchError((err: HttpErrorResponse) =>{
         console.log("CAUGHT ERROR: "+err.status)
         if(err.status === 401){
-          sessionStorage.removeItem("authToken");
+          localStorage.removeItem("authToken");
           authService.loggedIn.next(false);
           global.toastMessage.next(['alert-primary',"Your session has expired. Please sign in!"])
-          sessionStorage.setItem("prevURL",router.url)
+          localStorage.setItem("prevURL",router.url)
           router.navigate(["/signin"])
 
         }

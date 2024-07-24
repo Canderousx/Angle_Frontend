@@ -13,8 +13,8 @@ export interface accountRes{
   username: string,
   email: string,
   subscribers: number,
-  subscribedIds: string[],
   avatar: string,
+  subscribed?: boolean
 }
 
 @Injectable({
@@ -37,18 +37,23 @@ export class AuthenticationService {
   }
 
   logout(){
-    sessionStorage.removeItem("authToken");
-    this.global.toastMessage.next(["alert-primary","You've been signed out"])
-    this.loggedUser = {
-      id: '',
-      username: '',
-      email: '',
-      subscribers: 0,
-      subscribedIds: [],
-      avatar: '',
-    };
-    this.currentUser.next(this.loggedUser);
-    this.loggedIn.next(false);
+    if(!!localStorage.getItem("authToken")){
+      let token = localStorage.getItem("authToken");
+      this.http.post<serverResponse>(environment.backendUrl+"/auth/logout",token)
+      localStorage.removeItem("authToken");
+      this.global.toastMessage.next(["alert-primary","You've been signed out"])
+      this.loggedUser = {
+        id: '',
+        username: '',
+        email: '',
+        subscribers: 0,
+        avatar: '',
+      };
+
+      this.currentUser.next(this.loggedUser);
+      this.loggedIn.next(false);
+    }
+
   }
 
   getUserId(){

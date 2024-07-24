@@ -8,6 +8,7 @@ import {NgIf} from "@angular/common";
 import {GlobalMessengerService} from "../shared/services/global-messenger.service";
 import {fadeInOut} from "../shared/animations/fadeInOut";
 import {AuthenticationService} from "../shared/services/authentication.service";
+import {ModalComponent} from "../shared/components/modal/modal.component";
 
 
 export interface serverResponse{
@@ -17,7 +18,7 @@ export interface serverResponse{
   selector: 'app-root',
   standalone: true,
   animations: [fadeInOut],
-  imports: [RouterOutlet, HeaderComponent, FooterComponent, AlertComponent, NgIf],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent, AlertComponent, NgIf, ModalComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -30,7 +31,7 @@ export class AppComponent implements OnInit{
   alert: string[] = [];
 
   checkAuth(){
-    if(sessionStorage.getItem("authToken")){
+    if(localStorage.getItem("authToken")){
       this.auth.loggedIn.next(true);
     }
   }

@@ -1,4 +1,4 @@
-<div *ngIf="generatedId === ''" class="upload d-flex flex-column justify-content-center align-items-center align-content-center mt-5">
+<div *ngIf="generatedId === ''" class="upload d-flex flex-column justify-content-center align-items-center align-content-center vh-100">
   <div class="d-flex flex-column justify-content-center align-content-center align-items-center w-50 text-center" *ngIf="uploading">
     <ng-container *ngIf="progress !== 100">
       <span *ngIf="progress > 0" class="font-monospace">{{progress+'%'}}</span>
@@ -14,10 +14,11 @@
   </div>
 
   <form *ngIf="!uploading" class="d-flex flex-column justify-content-center align-content-center align-items-center w-50" (submit)="uploadVideo($event)">
+    <h2 class="mb-2">Click to start uploading.</h2>
     <input id="fileInput" type="file" (change)="selectFile($event)" accept="video/*" style="display: none" #fileInput>
     <button class="btn btn-primary" (click)="fileInput.click()"
             matTooltip="Click to start the upload"
-    >Select your angle!</button>
+    >Upload your video!</button>
     <button #uploadBtn type="submit" style="display:none">Upload</button>
   </form>
 </div>

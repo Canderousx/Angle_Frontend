@@ -42,7 +42,10 @@ export class SettingsComponent implements OnInit{
     this.authService.currentUser.subscribe({
       next: value => {
         this.user = value;
-      }    })
+      } ,
+    error: err => {
+        this.router.navigate(["/signin"])
+    }})
   }
 
   toggleChanger(){

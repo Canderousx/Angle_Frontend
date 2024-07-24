@@ -14,14 +14,15 @@
       <span class="my-2"><b>{{channelUser.username}}</b></span>
       <span>{{channelUser.subscribers}} subscribers</span>
       <button (click)="videosManager()" *ngIf="ownChannel" class="btn btn-primary btn-sm">Videos Manager</button>
-      <button *ngIf="!ownChannel" class="btn btn-primary">Subscribe!</button>
+      <button (click)="subscribe(true)" *ngIf="!ownChannel && !channelUser.subscribed" class="btn btn-primary">Subscribe!</button>
+      <span (click)="subscribe(false)" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()" *ngIf="channelUser.subscribed" class="subscribed">{{hover ? 'UNSUBSCRIBE' : 'SUBSCRIBED!'}}</span>
     </div>
   </div>
   <div class="mt-3">
     <mat-divider></mat-divider>
     <app-feed [videosList]="channelVideos" [flexDirection]="'flex-row'" [mainClass]="'videoMiniature-home'"></app-feed>
   </div>
-  <button *ngIf="channelVideos.length < totalVideos" class="btn btn-primary btn-sm">Load more</button>
+  <button *ngIf="channelVideos && channelVideos.length < totalVideos" class="btn btn-primary btn-sm">Load more</button>
 </div>
 
 

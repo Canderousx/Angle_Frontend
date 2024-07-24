@@ -59,8 +59,8 @@ export class VideoPlayerComponent implements OnInit, OnDestroy, AfterViewInit, O
     this.api.getDefaultMedia().subscriptions.loadedMetadata.subscribe(
       this.autoplay.bind(this)
     )
-    if(sessionStorage.getItem("volume")){
-      this.api.volume = +sessionStorage.getItem("volume")!;
+    if(localStorage.getItem("volume")){
+      this.api.volume = +localStorage.getItem("volume")!;
     }
     this.api.getDefaultMedia().subscriptions.volumeChange.subscribe(
       this.onVolumeChange.bind(this)
@@ -69,7 +69,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy, AfterViewInit, O
 
   onVolumeChange(event: any) {
     console.log("Volume changed!");
-    sessionStorage.setItem("volume",this.api.volume);
+    localStorage.setItem("volume",this.api.volume);
   }
 
   qualityChange(event: any) {

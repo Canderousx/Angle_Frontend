@@ -15,6 +15,8 @@ import {MatDividerModule} from "@angular/material/divider";
 import {MatTableModule} from "@angular/material/table";
 import {MatStepperModule} from "@angular/material/stepper";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 
 
@@ -40,7 +42,9 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
     MatDividerModule,
     MatTableModule,
     MatStepperModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatDialogModule,
+    MatPaginatorModule
   ]
 })
 export class MaterialModule { }

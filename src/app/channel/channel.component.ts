@@ -13,6 +13,7 @@ import {FeedComponent} from "../../shared/components/feed/feed.component";
 import {videoObj} from "../home/home.component";
 import {environment} from "../../environments/environment.development";
 import {Title} from "@angular/platform-browser";
+import {SubscribeService} from "../../shared/services/subscribe.service";
 
 @Component({
   selector: 'app-channel',
@@ -27,17 +28,40 @@ export class ChannelComponent implements OnInit, OnDestroy{
               private http: HttpClient,
               private auth: AuthenticationService,
               private router: Router,
-              private titleService: Title) {
+              private titleService: Title,
+              private subscribeService: SubscribeService,) {
   }
   currentUser!: accountRes
   channelUser!: accountRes
   channelId!: string;
   channelVideos!: videoObj[];
   sub!: Subscription;
+  subSub!: Subscription;
   querySub!: Subscription;
   page = 0;
+  pageSize = 12;
   totalVideos = 0;
   ownChannel = false;
+  hover = false;
+
+  onMouseEnter(){
+    this.hover = true;
+  }
+
+  onMouseLeave(){
+    this.hover = false;
+  }
+
+  subscribe(action: boolean){
+    if(action){
+      this.subscribeService.subscribe(this.channelUser.id);
+      this.channelUser.subscribers+=1;
+      return;
+    }
+    this.hover = false;
+    this.subscribeService.unsubscribe(this.channelUser.id);
+    this.channelUser.subscribers-=1;
+  }
 
   ngOnInit() {
     this.querySub = this.activatedRoute.queryParams.subscribe(params =>{
@@ -48,7 +72,23 @@ export class ChannelComponent implements OnInit, OnDestroy{
           next: value =>{
             if(value){
               this.channelUser = value;
+              this.subSub = this.subscribeService.subscribed.subscribe({
+                next: value => {
+                  this.channelUser.subscribed = value;
+                }
+              })
               console.log("Channel belongs to: "+this.channelUser.username);
+              if(!!localStorage.getItem("authToken")){
+                this.subscribeService.isSubscriber(this.channelUser.id)
+                  .subscribe({
+                    next: value =>{
+                      this.channelUser.subscribed = value;
+                    },
+                    error: err => {
+                      this.channelUser.subscribed = false;
+                    }
+                  })
+              }
               this.titleService.setTitle(this.channelUser.username)
               this.loadVideos();
             }
@@ -80,10 +120,13 @@ export class ChannelComponent implements OnInit, OnDestroy{
     if(this.querySub){
       this.querySub.unsubscribe();
     }
+    if(this.subSub){
+      this.subSub.unsubscribe();
+    }
   }
 
   loadVideos(){
-    this.http.get<videoObj[]>(environment.backendUrl+"/unAuth/videos/getUserVideos?id="+this.channelId+"&page="+this.page,{observe:"response"})
+    this.http.get<videoObj[]>(environment.backendUrl+"/unAuth/videos/getUserVideos?id="+this.channelId+"&page="+this.page+"&pageSize="+this.pageSize,{observe:"response"})
       .subscribe({
         next: value => {
           if(value.headers.get("totalVideos")){

@@ -1,5 +1,5 @@
 <mat-toolbar class="toolbar bg-dark text-white">
-  <img style="cursor: pointer" routerLink="" class="ml-2 scalable" ngSrc="assets/images/logoNoBG.png" width="142" height="45" priority  >
+  <img style="cursor: pointer" routerLink="" class="ml-2 scalable" ngSrcset="142w" ngSrc="assets/images/logoNoBG.png" width="142" height="45" priority >
   <span class="example-spacer"></span>
 
     <div class="col-md-5 mx-auto">
@@ -8,7 +8,7 @@
           <input [formControl]="search.controls.query" class="searcher form-control border rounded-pill" type="search" value="" placeholder="Find more Angles!..." id="searcher"
           [matAutocomplete]="auto">
           <mat-autocomplete #auto = "matAutocomplete" (optionSelected)="onOptionSelected($event)">
-            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+            <mat-option appMouseEnter *ngFor="let option of filteredOptions | async" [value]="option">
               {{ option }}
             </mat-option>
           </mat-autocomplete>

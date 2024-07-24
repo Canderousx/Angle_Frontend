@@ -7,7 +7,7 @@
 
       <mat-icon class="icon-display scale-animation-1" style="cursor: pointer;" (click)="fileInput.click()">upload</mat-icon>
       <form>
-        <input #fileInput type="file" (change)="handleInput($event)" accept="image/*" style="display: none">
+        <input #fileInput type="file" (change)="handleInput($event)" accept="image/jpeg, image/png, image/webp, image/jpg" style="display: none">
       </form>
     </mat-card-content>
     <mat-card-actions class="d-flex justify-content-center align-content-center">

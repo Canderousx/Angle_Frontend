@@ -1,7 +1,7 @@
 <div *ngIf="showPlayer">
   <vg-player (onPlayerReady)="onPlayerReady($event)">
     <vg-overlay-play></vg-overlay-play>
-    <vg-buffering vgFor="singleVideo"></vg-buffering>
+    <vg-buffering vgFor="singleVideo" ></vg-buffering>
     <vg-scrub-bar>
       <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
       <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>

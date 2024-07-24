@@ -4,6 +4,22 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
   color: rgb(34, 34, 34);
   background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
 }
+
+.report-window{
+  background: rgb(46, 46, 46);
+  color: whitesmoke;
+  padding: 2%;
+
+}
+
+.report-container{
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  margin-top: 1%;
+  background: rgba(0,0,0, 0.9);
+}
+
 .error{
   color: red;
 }
@@ -12,6 +28,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
 .rated{
   color: rgba(64, 188, 255, 1);
 }
+
+
 
 .btn-subscribe{
   min-width: 5%;
@@ -33,7 +51,31 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
   outline: none;
   padding: 0;
   border: 0;
+}
 
+.img-thumbnail-smaller-w{
+  width: 100px;
+  height: auto;
+  outline: none;
+  padding: 0;
+  border: 0;
+}
+
+
+
+.table{
+  --bs-table-bg: inherit;
+}
+
+.subscribed{
+  font-size: x-small;
+  color: #020283;
+  transition: all ease-in-out 0.2s;
+  cursor: pointer;
+}
+
+.subscribed:hover{
+  color: #a10202;
 }
 
 
@@ -88,6 +130,11 @@ pre{
   top: 0;
   bottom: 0;
   z-index: 9999;
+}
+
+.comment-border{
+  border-bottom: 1px solid #656565;
+  padding: 30px;
 }
 
 .player{

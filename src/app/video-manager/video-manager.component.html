@@ -1,5 +1,5 @@
-<div class="manager-window w-75">
-  <div *ngIf="accountVideos">
+<div class="manager-window">
+  <div *ngIf="accountVideos.length > 0">
     <table class="table">
       <thead>
       <tr>
@@ -32,5 +32,9 @@
       </tr>
       </tbody>
     </table>
+  </div>
+  <div *ngIf="accountVideos.length === 0">
+    <h3 class="text-center mt-5">You haven't uploaded any videos yet.</h3>
+    <app-upload></app-upload>
   </div>
 </div>

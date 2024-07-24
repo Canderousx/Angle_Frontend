@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {tag, videoDetails} from "../upload-metadata/upload-metadata.component";
 import {HttpClient} from "@angular/common/http";
 import {GlobalMessengerService} from "../../shared/services/global-messenger.service";
@@ -51,22 +51,16 @@ export class HomeComponent implements OnInit{
   latestVideos: videoObj[] = [];
   mostPopular: videoObj[] = [];
   loaded = false;
-  recommendedVideos: videoObj[] = [];
+  fromSubsVideos: videoObj[] = [];
   pageNum = 0;
+  subPageNum = 0;
   loggedIn!: boolean;
 
-
-
-
-
-  ngOnInit() {
-    this.loggedIn = !!sessionStorage.getItem("authToken");
-    this.loaded = false;
-    this.titleService.setTitle("Angle")
+  loadLatest(){
     this.http.get<videoObj[]>(environment.backendUrl+"/unAuth/videos/getAll?page="+this.pageNum)
       .subscribe({
         next: value => {
-          this.latestVideos = value;
+          this.latestVideos = this.latestVideos.concat(value);
           console.log("Videos received: "+this.latestVideos.length)
           this.loaded = true;
         },
@@ -75,6 +69,25 @@ export class HomeComponent implements OnInit{
           this.global.toastMessage.next(["alert-warning","Internal Server Error. Please try again later"])
         }
       })
+  }
+
+  @HostListener('window:scroll', [])
+  onWindowScroll(): void {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+      this.pageNum+=1;
+
+      this.loadLatest();
+    }
+  }
+
+
+
+
+  ngOnInit() {
+    this.loggedIn = !!localStorage.getItem("authToken");
+    this.loaded = false;
+    this.titleService.setTitle("Angle")
+
 
     this.http.get<videoObj[]>(environment.backendUrl+"/unAuth/videos/getMostPopular")
       .subscribe({
@@ -84,11 +97,13 @@ export class HomeComponent implements OnInit{
         }
       })
 
-    this.http.get<videoObj[]>(environment.backendUrl+"/unAuth/videos/getRecommendedVideos")
+    this.loadLatest();
+
+    this.http.get<videoObj[]>(environment.backendUrl+"/unAuth/videos/getBySubscribers?page="+this.subPageNum)
       .subscribe({
         next: value => {
-          console.log("Recommended received: "+value.length)
-          this.recommendedVideos = value;
+          console.log("Subs videos received: "+value.length)
+          this.fromSubsVideos = value;
         }
       })
 

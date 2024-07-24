@@ -17,6 +17,7 @@ import {serverResponse} from "../app.component";
 import {FeedComponent} from "../../shared/components/feed/feed.component";
 import {NextLinerPipe} from "../../shared/pipes/next-liner.pipe";
 import {Title} from "@angular/platform-browser";
+import {SubscribeService} from "../../shared/services/subscribe.service";
 
 @Component({
   selector: 'app-watch',
@@ -44,7 +45,8 @@ export class WatchComponent implements OnInit, OnDestroy{
               private activatedRoute: ActivatedRoute,
               private auth: AuthenticationService,
               private router: Router,
-              private titleService: Title) {
+              private titleService: Title,
+              private subscribeService: SubscribeService,) {
   }
   videoSub!: Subscription;
   videoId: string = "";
@@ -57,7 +59,18 @@ export class WatchComponent implements OnInit, OnDestroy{
   descClass = "short"
   descMaxLength = 80;
   sub!: Subscription;
+  subSub!: Subscription;
   currentUser!: accountRes;
+  hover = false;
+
+
+  onMouseEnter(){
+    this.hover = true;
+  }
+
+  onMouseLeave(){
+    this.hover = false;
+  }
 
 
   expandDescription(){
@@ -89,7 +102,7 @@ export class WatchComponent implements OnInit, OnDestroy{
 
   checkIfRated(){
     this.rated = false;
-    if(!!sessionStorage.getItem("authToken")){
+    if(!!localStorage.getItem("authToken")){
       this.http.get<boolean[]>(environment.backendUrl+"/auth/checkRated?v="+this.videoId)
         .subscribe({
           next: value => {
@@ -133,6 +146,17 @@ export class WatchComponent implements OnInit, OnDestroy{
       .subscribe({
         next: value => {
           this.author = value;
+          if(!!localStorage.getItem("authToken")){
+            this.subscribeService.isSubscriber(this.author.id)
+              .subscribe({
+                next: value =>{
+                  this.author.subscribed = value;
+                },
+                error: err => {
+                  this.author.subscribed = false;
+                }
+              })
+          }
         },
         error: err => {
           console.log(err.error);
@@ -151,12 +175,6 @@ export class WatchComponent implements OnInit, OnDestroy{
       'Content-Type': 'application/json',
       credentials: 'include',
     });
-    this.http.get(environment.backendUrl+"/unAuth/videos/addPreference?videoId="+this.video.id,{headers: headers,withCredentials:true})
-      .subscribe({
-        next: value => {
-
-        }
-      })
   }
 
   rateVideo(rate: boolean){
@@ -180,6 +198,10 @@ export class WatchComponent implements OnInit, OnDestroy{
           }
         })
   }
+
+  report(){
+    this.router.navigate(["/report"],{queryParams:{id: this.videoId,type:"video",src: this.router.url}})
+  }
   ngOnInit() {
     this.videoSub = this.activatedRoute.queryParams.subscribe({
         next: value => {
@@ -196,14 +218,34 @@ export class WatchComponent implements OnInit, OnDestroy{
               this.currentUser = value;
             }
           })
+          this.subSub = this.subscribeService.subscribed.subscribe({
+            next: value => {
+              this.author.subscribed = value;
+            }
+          })
           setTimeout(() =>{this.registerView()}, 30000)
         }
       }
     )
   }
+
+  subscribe(action: boolean){
+    if(action){
+      this.subscribeService.subscribe(this.author.id);
+      this.author.subscribers+=1;
+      return;
+    }
+    this.hover = false;
+    this.subscribeService.unsubscribe(this.author.id);
+    this.author.subscribers-=1;
+  }
+
   ngOnDestroy() {
     if(this.sub){
       this.sub.unsubscribe();
+    }
+    if(this.subSub){
+      this.subSub.unsubscribe();
     }
 
   }

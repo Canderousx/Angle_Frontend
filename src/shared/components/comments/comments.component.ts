@@ -12,6 +12,8 @@ import {DateFormatPipe} from "../../pipes/date-format.pipe";
 import {SimpleDatePipe} from "../../pipes/simple-date.pipe";
 import {MouseEnterDirective} from "../../directives/mouse-enter.directive";
 import {NextLinerPipe} from "../../pipes/next-liner.pipe";
+import {GlobalMessengerService} from "../../services/global-messenger.service";
+import {serverResponse} from "../../../app/app.component";
 
 @Component({
   selector: 'app-comments',
@@ -35,7 +37,8 @@ export class CommentsComponent implements OnInit, OnChanges{
 
   constructor(private http: HttpClient,
               private auth: AuthenticationService,
-              private router: Router) {
+              private router: Router,
+              private global: GlobalMessengerService) {
   }
 
   @Input() videoId!: string;
@@ -43,6 +46,7 @@ export class CommentsComponent implements OnInit, OnChanges{
   comments: Comment[] = [];
   totalComments = 0;
   page = 0;
+  pageSize = 10;
   loggedIn = false;
   maxLength = 35;
   rowLength = 120;
@@ -57,8 +61,26 @@ export class CommentsComponent implements OnInit, OnChanges{
     }
   }
 
+  delete(id: string | undefined){
+    this.http.delete<serverResponse>(environment.backendUrl+"/auth/comments/delete?id="+id)
+      .subscribe({
+        next: value => {
+          this.global.toastMessage.next(['alert-primary',value.message])
+          this.loadComments();
+        },
+        error: err => {
+          let error: serverResponse = err.error;
+          this.global.toastMessage.next(['alert-danger',error.message])
+        }
+      })
+  }
+
+  report(id: string | undefined){
+    this.router.navigate(["/report"],{queryParams:{id: id,type:"comment",src: this.router.url}})
+  }
+
   signin(){
-    sessionStorage.setItem("prevURL",this.router.url);
+    localStorage.setItem("prevURL",this.router.url);
     this.router.navigate(['signin'])
   }
 
@@ -68,7 +90,7 @@ export class CommentsComponent implements OnInit, OnChanges{
 
   shortenComment(comment: Comment){
     if(!comment.extended){
-      return comment.content.slice(0,this.maxLength);
+      return comment.content.slice(0,this.rowLength);
     }
     return comment.content;
   }
@@ -87,7 +109,7 @@ export class CommentsComponent implements OnInit, OnChanges{
         dislikes: 0,
       }
       this.commentForm.controls.content.reset();
-      this.http.post<Comment[]>(environment.backendUrl+"/unAuth/videos/addComment",comment,{observe:"response"})
+      this.http.post<Comment[]>(environment.backendUrl+"/auth/comments/addComment",comment,{observe:"response"})
         .subscribe({
           next: value => {
             const totalComments = value.headers.get("totalComments");
@@ -105,7 +127,8 @@ export class CommentsComponent implements OnInit, OnChanges{
 
   loadComments(){
     this.comments = [];
-    this.http.get<Comment[]>(environment.backendUrl+"/unAuth/videos/getComments?id="+this.videoId+"&page="+this.page,{observe:"response"})
+    this.http.get<Comment[]>(environment.backendUrl+"/unAuth/videos/getComments?id="+this.videoId+"&page="+this.page+"&pageSize="+this.pageSize,
+      {observe:"response"})
       .subscribe({
         next: value => {
           console.log(value)
@@ -151,7 +174,7 @@ export class CommentsComponent implements OnInit, OnChanges{
   }
 
   checkLogin(){
-    this.loggedIn = !!sessionStorage.getItem("authToken");
+    this.loggedIn = !!localStorage.getItem("authToken");
   }
 
 
