@@ -17,12 +17,12 @@ export class SubscribeService {
   subscribed: Subject<boolean> = new Subject();
 
   isSubscriber(id: string){
-    return this.http.get<boolean>(environment.backendUrl+"/auth/isSubscriber?id="+id)
+    return this.http.get<boolean>(environment.backendUrl+"/isSubscriber?id="+id)
   }
 
 
   subscribe(id: string){
-    this.http.get<serverResponse>(environment.backendUrl+"/auth/subscribe?id="+id)
+    this.http.get<serverResponse>(environment.backendUrl+"/subscribe?id="+id)
       .subscribe({
         next: value => {
           this.subscribed.next(true);
@@ -36,7 +36,7 @@ export class SubscribeService {
   }
 
   unsubscribe(id: string){
-    this.http.get<serverResponse>(environment.backendUrl+"/auth/unsubscribe?id="+id)
+    this.http.get<serverResponse>(environment.backendUrl+"/unsubscribe?id="+id)
       .subscribe({
         next: value => {
           this.subscribed.next(false);

@@ -9,6 +9,7 @@ import {Router, RouterLink} from "@angular/router";
 import {FeedComponent} from "../../shared/components/feed/feed.component";
 import {MatDivider} from "@angular/material/divider";
 import {Title} from "@angular/platform-browser";
+import {VideoService} from "../../shared/services/video.service";
 
 export interface videoObj{
   id: string,
@@ -23,7 +24,8 @@ export interface videoObj{
   hlsPath: string,
   thumbnail: string,
   isBanned: boolean,
-  authorAvatar: string
+  authorAvatar: string,
+  processing: boolean,
 }
 
 @Component({
@@ -42,9 +44,8 @@ export interface videoObj{
 })
 export class HomeComponent implements OnInit{
 
-  constructor(private http: HttpClient,
+  constructor(private videoService: VideoService,
               private global: GlobalMessengerService,
-              private router: Router,
               private titleService: Title) {
   }
 
@@ -57,8 +58,7 @@ export class HomeComponent implements OnInit{
   loggedIn!: boolean;
 
   loadLatest(){
-    this.http.get<videoObj[]>(environment.backendUrl+"/unAuth/videos/getAll?page="+this.pageNum)
-      .subscribe({
+    this.videoService.getLatestVideos(this.pageNum).subscribe({
         next: value => {
           this.latestVideos = this.latestVideos.concat(value);
           console.log("Videos received: "+this.latestVideos.length)
@@ -89,8 +89,7 @@ export class HomeComponent implements OnInit{
     this.titleService.setTitle("Angle")
 
 
-    this.http.get<videoObj[]>(environment.backendUrl+"/unAuth/videos/getMostPopular")
-      .subscribe({
+    this.videoService.getMostPopular().subscribe({
         next: value => {
           console.log("Popular received: "+value.length)
           this.mostPopular = value;
@@ -98,9 +97,7 @@ export class HomeComponent implements OnInit{
       })
 
     this.loadLatest();
-
-    this.http.get<videoObj[]>(environment.backendUrl+"/unAuth/videos/getBySubscribers?page="+this.subPageNum)
-      .subscribe({
+        this.videoService.getBySubscribers(this.subPageNum).subscribe({
         next: value => {
           console.log("Subs videos received: "+value.length)
           this.fromSubsVideos = value;

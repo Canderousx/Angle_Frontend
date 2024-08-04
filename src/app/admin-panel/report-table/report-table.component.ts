@@ -10,7 +10,6 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {Report} from "../../../shared/models/report";
 import {DateFormatPipe} from "../../../shared/pipes/date-format.pipe";
 import {ModalService} from "../../../shared/services/modal.service";
-import {AdminPanelComponent} from "../admin-panel.component";
 import {ModalComponent} from "../../../shared/components/modal/modal.component";
 import {Subscription} from "rxjs";
 import {ViewReportComponent} from "./view-report/view-report.component";
@@ -39,7 +38,6 @@ import {PageEvent} from "@angular/material/paginator";
 export class ReportTableComponent implements OnInit, OnDestroy{
 
   constructor(private router: Router,
-              private http: HttpClient,
               private modal: ModalService) {
   }
 

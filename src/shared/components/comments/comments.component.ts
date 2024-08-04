@@ -14,6 +14,7 @@ import {MouseEnterDirective} from "../../directives/mouse-enter.directive";
 import {NextLinerPipe} from "../../pipes/next-liner.pipe";
 import {GlobalMessengerService} from "../../services/global-messenger.service";
 import {serverResponse} from "../../../app/app.component";
+import {CommentsService} from "../../services/comments.service";
 
 @Component({
   selector: 'app-comments',
@@ -35,7 +36,7 @@ import {serverResponse} from "../../../app/app.component";
 })
 export class CommentsComponent implements OnInit, OnChanges{
 
-  constructor(private http: HttpClient,
+  constructor(private commentsService: CommentsService,
               private auth: AuthenticationService,
               private router: Router,
               private global: GlobalMessengerService) {
@@ -62,7 +63,7 @@ export class CommentsComponent implements OnInit, OnChanges{
   }
 
   delete(id: string | undefined){
-    this.http.delete<serverResponse>(environment.backendUrl+"/auth/comments/delete?id="+id)
+    this.commentsService.deleteComment(id!)
       .subscribe({
         next: value => {
           this.global.toastMessage.next(['alert-primary',value.message])
@@ -109,7 +110,7 @@ export class CommentsComponent implements OnInit, OnChanges{
         dislikes: 0,
       }
       this.commentForm.controls.content.reset();
-      this.http.post<Comment[]>(environment.backendUrl+"/auth/comments/addComment",comment,{observe:"response"})
+      this.commentsService.addComment(comment)
         .subscribe({
           next: value => {
             const totalComments = value.headers.get("totalComments");
@@ -127,8 +128,8 @@ export class CommentsComponent implements OnInit, OnChanges{
 
   loadComments(){
     this.comments = [];
-    this.http.get<Comment[]>(environment.backendUrl+"/unAuth/videos/getComments?id="+this.videoId+"&page="+this.page+"&pageSize="+this.pageSize,
-      {observe:"response"})
+
+    this.commentsService.loadComments(this.videoId,this.page,this.pageSize)
       .subscribe({
         next: value => {
           console.log(value)
@@ -148,11 +149,14 @@ export class CommentsComponent implements OnInit, OnChanges{
   moreComments(){
     this.page++;
     console.log("Comments page: "+this.page)
-    this.http.get<Comment[]>(environment.backendUrl+"/unAuth/videos/getComments?id="+this.videoId+"&page="+this.page)
+    this.commentsService.loadComments(this.videoId,this.page,this.pageSize)
       .subscribe({
         next: value => {
-          console.log("MORE COMMENTS: "+value.length)
-          this.comments = this.comments.concat(value);
+          if(value.body){
+            console.log("MORE COMMENTS: "+value.body.length)
+            this.comments = this.comments.concat(value.body);
+          }
+
         }
       })
   }

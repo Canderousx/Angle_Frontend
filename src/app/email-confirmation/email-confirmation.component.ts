@@ -5,6 +5,7 @@ import {Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {serverResponse} from "../app.component";
 import {environment} from "../../environments/environment.development";
+import {EmailService} from "../../shared/services/email.service";
 
 @Component({
   selector: 'app-email-confirmation',
@@ -15,18 +16,16 @@ import {environment} from "../../environments/environment.development";
 })
 export class EmailConfirmationComponent implements OnInit{
 
-  constructor(private http: HttpClient,
+  constructor(private emailService: EmailService,
               private global: GlobalMessengerService,
               private router: Router,
               private activatedRoute: ActivatedRoute,) {
   }
 
-  sub!: Subscription;
   token!: string;
 
   confirmEmail(){
-    this.http.post<serverResponse>(environment.backendUrl+"/unAuth/signup/confirmAccount?token="+this.token,{})
-      .subscribe({
+    this.emailService.confirmEmail(this.token).subscribe({
         next: value => {
           this.global.toastMessage.next(["alert-primary",value.message]);
           this.router.navigate(["/signin"]);

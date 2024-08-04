@@ -13,6 +13,7 @@ import {MatInput} from "@angular/material/input";
 import {serverResponse} from "../app.component";
 import {F} from "@angular/cdk/keycodes";
 import {videoObj} from "../home/home.component";
+import {VideoService} from "../../shared/services/video.service";
 
 
 export interface thumbnail{
@@ -49,7 +50,7 @@ export interface videoDetails{
 export class UploadMetadataComponent implements OnInit, OnDestroy{
 
   constructor(private activatedRoute: ActivatedRoute,
-              private http: HttpClient,
+              private videoService: VideoService,
               private router: Router,
               private global: GlobalMessengerService) {
   }
@@ -90,13 +91,12 @@ export class UploadMetadataComponent implements OnInit, OnDestroy{
     console.log("Tags size: "+tags.length)
 
     let video = {
-      name: this.metaName.controls.name.value,
-      description: this.metaDesc.controls.description.value,
+      name: this.metaName.controls.name.value!,
+      description: this.metaDesc.controls.description.value!,
       tags: tags!,
-      thumbnail: this.metaThumbnail.controls.thumbnail.value
+      thumbnail: this.metaThumbnail.controls.thumbnail.value!
     }
-    this.http.post<serverResponse>(environment.backendUrl+"/auth/upload/setMetadata?id="+this.videoId,video)
-      .subscribe({
+    this.videoService.setMetadata(this.videoId,video).subscribe({
         next: value => {
           this.global.toastMessage.next(['alert-success','Your video has been saved!'])
           this.router.navigate([''])
@@ -109,8 +109,7 @@ export class UploadMetadataComponent implements OnInit, OnDestroy{
   }
 
   setExistingVideo(){
-    this.http.get<videoObj>(environment.backendUrl+"/unAuth/videos/getVideo?id="+this.videoId)
-      .subscribe({
+    this.videoService.setExistingVideo(this.videoId).subscribe({
         next: value => {
           this.metaName.controls.name.setValue(value.name);
           this.metaDesc.controls.description.setValue(value.description);
@@ -137,12 +136,13 @@ export class UploadMetadataComponent implements OnInit, OnDestroy{
         }
       }
     })
-    this.http.get<thumbnail[]>(environment.backendUrl+"/auth/upload/getThumbnails?v="+this.videoId)
+    this.videoService.getThumbnails(this.videoId)
       .subscribe({
         next: value => {
-          this.thumbnails = value;
+          value.forEach(val => {
+            this.thumbnails.push({content: val})
+          })
           console.log("Received thumbnails: "+this.thumbnails.length)
-
         },
         error: (err : HttpErrorResponse) => {
           if(err.status === 400){

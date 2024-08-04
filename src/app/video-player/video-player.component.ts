@@ -12,7 +12,6 @@ import {
 import {GlobalMessengerService} from "../../shared/services/global-messenger.service";
 import {ActivatedRoute} from "@angular/router";
 import {Subscription} from "rxjs";
-import {environment} from "../../environments/environment";
 import {NgIf} from "@angular/common";
 import {VgControlsModule} from "@videogular/ngx-videogular/controls";
 import {BitrateOptions, VgApiService, VgCoreModule} from "@videogular/ngx-videogular/core";
@@ -47,7 +46,6 @@ export class VideoPlayerComponent implements OnInit, OnDestroy, AfterViewInit, O
   }
   @Input()videoId!: string;
   @Input()videoURL!: string;
-  videoSub!: Subscription;
   showPlayer = true;
   api: VgApiService = new VgApiService();
   qualities: BitrateOptions[] = [];
@@ -72,9 +70,6 @@ export class VideoPlayerComponent implements OnInit, OnDestroy, AfterViewInit, O
     localStorage.setItem("volume",this.api.volume);
   }
 
-  qualityChange(event: any) {
-
-  }
 
   ngOnChanges(changes: SimpleChanges) {
     if(changes['videoId'] && !changes['videoId'].isFirstChange()){
@@ -92,9 +87,6 @@ export class VideoPlayerComponent implements OnInit, OnDestroy, AfterViewInit, O
 
   }
 
-  // toggleFullscreen(){
-  //
-  // }
 
   autoplay(){
     console.log("play")

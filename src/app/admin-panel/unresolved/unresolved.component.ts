@@ -53,7 +53,7 @@ export class UnresolvedComponent implements OnInit{
   }
 
   getPage(){
-    this.http.get<Report[]>(environment.backendUrl+"/auth/report/getUnresolved?page="
+    this.http.get<Report[]>(environment.backendUrl+"/report/getUnresolved?page="
       +this.pageIndex+"&pageSize="+this.pageSize+"&sortBy="+this.sortBy+"&order="+this.order,{observe: "response"})
       .subscribe({
         next: value => {

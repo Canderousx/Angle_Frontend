@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {GlobalMessengerService} from "../../services/global-messenger.service";
 import {environment} from "../../../environments/environment.development";
 import {serverResponse} from "../../../app/app.component";
+import {AvatarChangerService} from "../../services/avatar-changer.service";
 
 @Component({
   selector: 'app-avatar-change',
@@ -20,7 +21,7 @@ export class AvatarChangeComponent {
   @Output() close = new EventEmitter<any>;
   selectedFile!: File;
 
-  constructor(private http: HttpClient,
+  constructor(private avatarService: AvatarChangerService,
               private global: GlobalMessengerService) {
   }
 
@@ -46,7 +47,7 @@ export class AvatarChangeComponent {
   uploadAvatar(){
     const formData = new FormData();
     formData.append('file',this.selectedFile,this.selectedFile.name)
-    this.http.post<serverResponse>(environment.backendUrl+"/auth/changeAvatar?id="+this.userId,formData)
+    this.avatarService.changeAvatar(this.userId,formData)
       .subscribe({
         next: value => {
           this.global.toastMessage.next(["alert-primary","Avatar has been changed"])

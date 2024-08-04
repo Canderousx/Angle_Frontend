@@ -13,11 +13,13 @@ import {serverResponse} from "../app.component";
 import {GlobalMessengerService} from "../../shared/services/global-messenger.service";
 import {Title} from "@angular/platform-browser";
 import {UploadComponent} from "../upload/upload.component";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
+import {VideoService} from "../../shared/services/video.service";
 
 @Component({
   selector: 'app-video-manager',
   standalone: true,
-  imports: [MaterialModule, NgIf, NgForOf, Base64ImagePipe, SimpleDatePipe, MouseEnterDirective, RouterLink, UploadComponent],
+  imports: [MaterialModule, NgIf, NgForOf, Base64ImagePipe, SimpleDatePipe, MouseEnterDirective, RouterLink, UploadComponent, MatProgressSpinner],
   templateUrl: './video-manager.component.html',
   styleUrl: './video-manager.component.css'
 })
@@ -30,7 +32,7 @@ export class VideoManagerComponent implements OnInit{
   page = 0;
   pageSize = 10;
 
-  constructor(private http: HttpClient,
+  constructor(private videoService: VideoService,
               private auth: AuthenticationService,
               private router: Router,
               private activatedRoute: ActivatedRoute,
@@ -48,7 +50,7 @@ export class VideoManagerComponent implements OnInit{
   }
 
   deleteVideo(id: string){
-    this.http.delete<serverResponse>(environment.backendUrl+"/auth/deleteVideo?id="+id).subscribe({
+    this.videoService.deleteVideo(id).subscribe({
       next: value => {
         this.loadVideos();
         this.global.toastMessage.next(["alert-primary",value.message])
@@ -77,8 +79,7 @@ export class VideoManagerComponent implements OnInit{
       next: params => {
         this.paramId = params['id'];
         if(this.paramId === this.currentUser.id){
-          this.http.get<videoObj[]>(environment.backendUrl+"/unAuth/videos/getUserVideos?id="+this.paramId+"&page="+this.page+"&pageSize="+this.pageSize,{observe:"response"})
-            .subscribe({
+          this.videoService.getUserVideos(this.paramId,this.page,this.pageSize).subscribe({
               next: value => {
                 if(value.headers.get("totalVideos")){
                   const totalVideos = value.headers.get("totalVideos");

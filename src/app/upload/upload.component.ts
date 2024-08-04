@@ -10,6 +10,7 @@ import {filter, map, tap} from "rxjs";
 import {MouseEnterDirective} from "../../shared/directives/mouse-enter.directive";
 import {Router, RouterOutlet} from "@angular/router";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
+import {VideoService} from "../../shared/services/video.service";
 
 @Component({
   selector: 'app-upload',
@@ -37,7 +38,7 @@ export class UploadComponent {
   uploading = false;
   @ViewChild('uploadBtn', { static: false }) uploadBtn!: ElementRef<HTMLButtonElement>;
 
-  constructor(private http: HttpClient,
+  constructor(private videoService: VideoService,
               private global: GlobalMessengerService,
               private router: Router) { }
 
@@ -49,8 +50,8 @@ export class UploadComponent {
       this.uploading = true;
       const formData = new FormData();
       formData.append('file', this.selectedFile);
-      this.http.post<serverResponse>(`${environment.backendUrl}/auth/upload`, formData,{observe: 'events', reportProgress: true})
-        .pipe(
+
+      this.videoService.uploadVideo(formData).pipe(
           tap(event =>{
             if (event.type === HttpEventType.UploadProgress){
               if(event.total){
@@ -96,8 +97,8 @@ export class UploadComponent {
 
   getThumbnails(){
     this.thumbnails = [];
-    this.http.get<string[]>(environment.backendUrl+"/auth/upload/getThumbnails?v="+this.generatedId)
-      .subscribe({
+
+    this.videoService.getThumbnails(this.generatedId).subscribe({
         next: value => {
           this.thumbnails = value;
           this.videoLoaded = true;

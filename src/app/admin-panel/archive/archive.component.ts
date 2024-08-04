@@ -3,6 +3,7 @@ import {ReportTableComponent} from "../report-table/report-table.component";
 import {HttpClient} from "@angular/common/http";
 import {Report} from "../../../shared/models/report";
 import {environment} from "../../../environments/environment.development";
+import {ReportService} from "../../../shared/services/report.service";
 
 @Component({
   selector: 'app-archive',
@@ -14,7 +15,7 @@ import {environment} from "../../../environments/environment.development";
   styleUrl: './archive.component.css'
 })
 export class ArchiveComponent {
-  constructor(private http: HttpClient) {
+  constructor(private reportService: ReportService) {
   }
 
   reports!: Report[];
@@ -43,9 +44,7 @@ export class ArchiveComponent {
   }
 
   getPage(){
-    this.http.get<Report[]>(environment.backendUrl+"/auth/report/getResolved?page="
-      +this.pageIndex+"&pageSize="+this.pageSize+"&sortBy="+this.sortBy+"&order="+this.order,{observe: "response"})
-      .subscribe({
+      this.reportService.getAllReports(this.pageIndex,this.pageSize,this.sortBy,this.order).subscribe({
         next: value => {
           let totalReports = value.headers.get("totalReports");
           if (totalReports && value.body){

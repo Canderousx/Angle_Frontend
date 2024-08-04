@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {VideoPlayerComponent} from "../video-player/video-player.component";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpHeaders} from "@angular/common/http";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {Subscription} from "rxjs";
 import {environment} from "../../environments/environment";
@@ -18,6 +18,7 @@ import {FeedComponent} from "../../shared/components/feed/feed.component";
 import {NextLinerPipe} from "../../shared/pipes/next-liner.pipe";
 import {Title} from "@angular/platform-browser";
 import {SubscribeService} from "../../shared/services/subscribe.service";
+import {VideoService} from "../../shared/services/video.service";
 
 @Component({
   selector: 'app-watch',
@@ -41,7 +42,7 @@ import {SubscribeService} from "../../shared/services/subscribe.service";
   styleUrl: './watch.component.css'
 })
 export class WatchComponent implements OnInit, OnDestroy{
-  constructor(private http: HttpClient,
+  constructor(private videoService: VideoService,
               private activatedRoute: ActivatedRoute,
               private auth: AuthenticationService,
               private router: Router,
@@ -103,7 +104,7 @@ export class WatchComponent implements OnInit, OnDestroy{
   checkIfRated(){
     this.rated = false;
     if(!!localStorage.getItem("authToken")){
-      this.http.get<boolean[]>(environment.backendUrl+"/auth/checkRated?v="+this.videoId)
+      this.videoService.checkRate(this.videoId)
         .subscribe({
           next: value => {
             if(value.length > 0){
@@ -120,7 +121,7 @@ export class WatchComponent implements OnInit, OnDestroy{
 
 
   setVideoUrl(){
-    this.videoURL = environment.backendUrl+"/media/hls/"+this.videoId+"/"+this.videoId+"_playlist.m3u8";
+    this.videoURL = environment.backendUrl+"/resources/media/hls/"+this.videoId+"/"+this.videoId+"_playlist.m3u8";
   }
 
   authorPage(){
@@ -128,7 +129,7 @@ export class WatchComponent implements OnInit, OnDestroy{
   }
 
   getVideoObj(){
-    this.http.get<videoObj>(environment.backendUrl+"/unAuth/videos/getVideo?id="+this.videoId)
+    this.videoService.getVideo(this.videoId)
       .subscribe({
         next: value => {
           this.video = value;
@@ -142,7 +143,7 @@ export class WatchComponent implements OnInit, OnDestroy{
   }
 
   getAuthor(){
-    this.http.get<accountRes>(environment.backendUrl+"/unAuth/videos/getAccount?id="+this.video.authorId)
+    this.videoService.getAuthor(this.video.authorId)
       .subscribe({
         next: value => {
           this.author = value;
@@ -165,7 +166,7 @@ export class WatchComponent implements OnInit, OnDestroy{
   }
 
   registerView(){
-    this.http.patch<serverResponse>(environment.backendUrl+"/unAuth/videos/registerView?id="+this.video.id,{})
+    this.videoService.registerView(this.video.id)
       .subscribe({
         next: value => {
           this.video.views+=1;
@@ -178,7 +179,7 @@ export class WatchComponent implements OnInit, OnDestroy{
   }
 
   rateVideo(rate: boolean){
-      this.http.post(environment.backendUrl+"/auth/rateVideo?v="+this.videoId,rate)
+      this.videoService.rateVideo(this.videoId,rate)
         .subscribe({
           next: value => {
             if(rate){
@@ -252,7 +253,7 @@ export class WatchComponent implements OnInit, OnDestroy{
 
   getSimilarVideos(){
     this.similarVideos = [];
-    this.http.get<videoObj[]>(environment.backendUrl+"/unAuth/videos/getSimilar?id="+this.videoId)
+    this.videoService.getSimilarVideos(this.videoId)
       .subscribe({
         next: value => {
           this.similarVideos = value;

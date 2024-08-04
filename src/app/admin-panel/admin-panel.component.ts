@@ -5,6 +5,8 @@ import {environment} from "../../environments/environment.development";
 import {error} from "@angular/compiler-cli/src/transformers/util";
 import {NgOptimizedImage} from "@angular/common";
 import {serverResponse} from "../app.component";
+import {ReportService} from "../../shared/services/report.service";
+import {AuthenticationService} from "../../shared/services/authentication.service";
 
 @Component({
   selector: 'app-admin-panel',
@@ -20,14 +22,14 @@ import {serverResponse} from "../app.component";
 export class AdminPanelComponent implements OnInit{
 
   constructor(private router: Router,
-              private http: HttpClient,) {
+              private reportService: ReportService,
+              private authenticationService: AuthenticationService,) {
   }
 
   newReports = 0;
 
   checkNewReports(){
-    this.http.get<number>(environment.backendUrl+"/auth/report/howManyUnresolved")
-      .subscribe({
+      this.reportService.howManyUnresolved().subscribe({
         next: value => {
           this.newReports = value;
         }
@@ -35,8 +37,7 @@ export class AdminPanelComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.http.get<boolean>(environment.backendUrl+"/auth/isAdmin")
-      .subscribe({
+    this.authenticationService.isAdmin().subscribe({
         next: value => {
           console.log("IS ADMIN: "+value);
           if(!value){

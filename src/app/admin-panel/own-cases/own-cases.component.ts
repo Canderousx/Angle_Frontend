@@ -3,6 +3,7 @@ import {Report} from "../../../shared/models/report";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../environments/environment.development";
 import {ReportTableComponent} from "../report-table/report-table.component";
+import {ReportService} from "../../../shared/services/report.service";
 
 @Component({
   selector: 'app-own-cases',
@@ -15,7 +16,7 @@ import {ReportTableComponent} from "../report-table/report-table.component";
 })
 export class OwnCasesComponent implements OnInit{
 
-  constructor(private http: HttpClient) {
+  constructor(private reportService: ReportService) {
   }
 
   reports!: Report[];
@@ -44,9 +45,7 @@ export class OwnCasesComponent implements OnInit{
   }
 
   getPage(){
-    this.http.get<Report[]>(environment.backendUrl+"/auth/report/getMyCases?page="
-      +this.pageIndex+"&pageSize="+this.pageSize+"&sortBy="+this.sortBy+"&order="+this.order,{observe: "response"})
-      .subscribe({
+      this.reportService.getMyCases(this.pageIndex,this.pageSize,this.sortBy,this.order).subscribe({
         next: value => {
           let totalReports = value.headers.get("totalReports");
           if (totalReports && value.body){

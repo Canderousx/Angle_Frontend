@@ -14,6 +14,7 @@ import {videoObj} from "../home/home.component";
 import {environment} from "../../environments/environment.development";
 import {Title} from "@angular/platform-browser";
 import {SubscribeService} from "../../shared/services/subscribe.service";
+import {VideoService} from "../../shared/services/video.service";
 
 @Component({
   selector: 'app-channel',
@@ -25,11 +26,11 @@ import {SubscribeService} from "../../shared/services/subscribe.service";
 export class ChannelComponent implements OnInit, OnDestroy{
 
   constructor(private activatedRoute: ActivatedRoute,
-              private http: HttpClient,
               private auth: AuthenticationService,
               private router: Router,
               private titleService: Title,
-              private subscribeService: SubscribeService,) {
+              private subscribeService: SubscribeService,
+              private videoService: VideoService,) {
   }
   currentUser!: accountRes
   channelUser!: accountRes
@@ -126,8 +127,7 @@ export class ChannelComponent implements OnInit, OnDestroy{
   }
 
   loadVideos(){
-    this.http.get<videoObj[]>(environment.backendUrl+"/unAuth/videos/getUserVideos?id="+this.channelId+"&page="+this.page+"&pageSize="+this.pageSize,{observe:"response"})
-      .subscribe({
+    this.videoService.getUserVideos(this.channelId,this.page,this.pageSize).subscribe({
         next: value => {
           if(value.headers.get("totalVideos")){
             const totalVideos = value.headers.get("totalVideos");

@@ -7,6 +7,7 @@ import {GlobalMessengerService} from "../../shared/services/global-messenger.ser
 import {MatInput} from "@angular/material/input";
 import {NgIf} from "@angular/common";
 import {RouterLink} from "@angular/router";
+import {AuthenticationService} from "../../shared/services/authentication.service";
 
 @Component({
   selector: 'app-forgot-password',
@@ -23,7 +24,7 @@ import {RouterLink} from "@angular/router";
 })
 export class ForgotPasswordComponent {
 
-  constructor(private http: HttpClient,
+  constructor(private authService: AuthenticationService,
               private global: GlobalMessengerService) {}
 
   emailForm = new FormGroup({
@@ -31,8 +32,7 @@ export class ForgotPasswordComponent {
   })
 
   submit(){
-    this.http.post<serverResponse>(environment.backendUrl+"/unAuth/passwordRecovery",
-      this.emailForm.controls.email.value).subscribe({
+    this.authService.passwordRecovery(this.emailForm.controls.email.value!).subscribe({
       next: value => {
         this.global.toastMessage.next(['alert-primary',value.message])
       }

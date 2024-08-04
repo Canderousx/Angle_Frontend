@@ -24,8 +24,6 @@ import {Title} from "@angular/platform-browser";
 export class SettingsComponent implements OnInit{
 
   constructor(private authService: AuthenticationService,
-              private global: GlobalMessengerService,
-              private avatarChanger: AvatarChangerService,
               private router: Router,
               private titleService: Title,) {
   }

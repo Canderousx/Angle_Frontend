@@ -8,6 +8,7 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {Observable, of, startWith, switchMap} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../environments/environment.development";
+import {SearchService} from "../../services/search.service";
 
 @Component({
   selector: 'app-header',
@@ -20,7 +21,7 @@ export class HeaderComponent implements OnInit{
 
   constructor(private auth: AuthenticationService,
               private router: Router,
-              private http: HttpClient) {
+              private searchService: SearchService,) {
   }
 
   @Input()loggedIn!: boolean;
@@ -38,7 +39,7 @@ export class HeaderComponent implements OnInit{
   }
 
   private _filter(value: string): Observable<string[]> {
-    return this.http.get<string[]>(environment.backendUrl+"/unAuth/search/helper?q="+this.search.controls.query.value);
+    return this.searchService.searchHelper(this.search.controls.query.value!);
   }
 
   onOptionSelected(event: any) {

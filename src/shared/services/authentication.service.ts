@@ -39,7 +39,7 @@ export class AuthenticationService {
   logout(){
     if(!!localStorage.getItem("authToken")){
       let token = localStorage.getItem("authToken");
-      this.http.post<serverResponse>(environment.backendUrl+"/auth/logout",token)
+      this.http.post<serverResponse>(environment.backendUrl+"/logout",token)
       localStorage.removeItem("authToken");
       this.global.toastMessage.next(["alert-primary","You've been signed out"])
       this.loggedUser = {
@@ -57,10 +57,10 @@ export class AuthenticationService {
   }
 
   getUserId(){
-    return this.http.get<serverResponse>(environment.backendUrl+"/auth/getMyId");
+    return this.http.get<serverResponse>(environment.backendUrl+"/getMyId");
   }
   getCurrentUser(){
-    this.http.get<accountRes>(environment.backendUrl+"/auth/getCurrentUser")
+    this.http.get<accountRes>(environment.backendUrl+"/getCurrentUser")
       .subscribe({
         next: value => {
           this.currentUser.next(value);
@@ -69,8 +69,20 @@ export class AuthenticationService {
 
   }
 
+  signup(account: any){
+    return this.http.post<serverResponse>(environment.backendUrl+"/unAuth/signup",account)
+  }
+
   getUser(id: string){
     return this.http.get<accountRes>(environment.backendUrl+"/unAuth/videos/getUserById?id="+id)
+  }
+
+  isAdmin(){
+    return this.http.get<boolean>(environment.backendUrl+"/isAdmin");
+  }
+
+  passwordRecovery(email: string){
+    return this.http.post<serverResponse>(environment.backendUrl+"/unAuth/passwordRecovery",email)
   }
 
 

@@ -21,6 +21,9 @@ import {Title} from "@angular/platform-browser";
 import {serverResponse} from "../../../app/app.component";
 import {GlobalMessengerService} from "../../services/global-messenger.service";
 import {error} from "@angular/compiler-cli/src/transformers/util";
+import {ReportService} from "../../services/report.service";
+import {VideoService} from "../../services/video.service";
+import {CommentsService} from "../../services/comments.service";
 
 @Component({
   selector: 'app-report',
@@ -47,7 +50,9 @@ export class ReportComponent implements OnInit, OnDestroy{
 
   constructor(private router: Router,
               private activatedRoute: ActivatedRoute,
-              private http: HttpClient,
+              private reportService: ReportService,
+              private videoService: VideoService,
+              private commentsService: CommentsService,
               private title: Title,
               private global: GlobalMessengerService) {
   }
@@ -70,8 +75,8 @@ export class ReportComponent implements OnInit, OnDestroy{
 
   sendReport(){
     if(this.reportForm.valid){
-      let reportData = [this.mediaId,this.reportForm.controls.category.value,this.reportForm.controls.content.value,this.reportedAccountId];
-      this.http.post<serverResponse>(environment.backendUrl+"/auth/report/"+this.type,reportData)
+      let reportData = [this.mediaId,this.reportForm.controls.category.value!,this.reportForm.controls.content.value!,this.reportedAccountId];
+      this.reportService.sendReport(this.type,reportData)
         .subscribe({
           next: value => {
             this.global.toastMessage.next(['alert-primary',value.message])
@@ -88,7 +93,7 @@ export class ReportComponent implements OnInit, OnDestroy{
   }
 
   getCategories() {
-    this.http.get<string[]>(environment.backendUrl+"/auth/report/getCategories").subscribe({
+    this.reportService.getCategories().subscribe({
       next: value => {
         this.categories = value;
       }
@@ -100,7 +105,7 @@ export class ReportComponent implements OnInit, OnDestroy{
 
   getMedia(){
     if(this.type === 'video'){
-       this.http.get<videoObj>(environment.backendUrl+"/unAuth/videos/getVideo?id="+this.mediaId)
+       this.videoService.getVideo(this.mediaId)
          .subscribe({
            next: value => {
              this.reportedVideo = value;
@@ -109,7 +114,7 @@ export class ReportComponent implements OnInit, OnDestroy{
            }
          })
     }else{
-       this.http.get<Comment>(environment.backendUrl+"/auth/comments/getComment?id="+this.mediaId)
+      this.commentsService.getComment(this.mediaId)
          .subscribe({next: value => {
            this.reportedComment = value;
            this.reportedAccountId = value.authorId;

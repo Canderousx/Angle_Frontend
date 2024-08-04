@@ -1,13 +1,12 @@
-import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {Component,OnInit,} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {videoObj} from "../home/home.component";
-import {environment} from "../../environments/environment.development";
 import {FeedComponent} from "../../shared/components/feed/feed.component";
 import {NgForOf} from "@angular/common";
 import {Base64ImagePipe} from "../../shared/pipes/base64-image.pipe";
 import {SimpleDatePipe} from "../../shared/pipes/simple-date.pipe";
 import {MouseEnterDirective} from "../../shared/directives/mouse-enter.directive";
+import {SearchService} from "../../shared/services/search.service";
 @Component({
   selector: 'app-search',
   standalone: true,
@@ -23,7 +22,7 @@ import {MouseEnterDirective} from "../../shared/directives/mouse-enter.directive
 })
 export class SearchComponent implements OnInit{
 
-  constructor(private http: HttpClient,
+  constructor(private searchService: SearchService,
               private activatedRoute: ActivatedRoute,
               private router: Router) {
 
@@ -51,8 +50,7 @@ export class SearchComponent implements OnInit{
   search(){
     console.log("SEARCHING")
     if(this.query){
-      this.http.get<videoObj[]>(environment.backendUrl+"/unAuth/search?q="+this.query+"&page="+this.page)
-        .subscribe({
+      this.searchService.search(this.query,this.page).subscribe({
           next: value => {
             this.results = value;
           }

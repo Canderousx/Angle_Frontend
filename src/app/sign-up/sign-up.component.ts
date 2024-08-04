@@ -13,6 +13,7 @@ import {Router} from "@angular/router";
 import {error} from "@angular/compiler-cli/src/transformers/util";
 import {UsernameValidatorService} from "../../shared/validators/UsernameValidatorService";
 import {Title} from "@angular/platform-browser";
+import {AuthenticationService} from "../../shared/services/authentication.service";
 
 export interface signUpReq{
   username: string,
@@ -36,9 +37,9 @@ export interface signUpReq{
   styleUrl: './sign-up.component.css'
 })
 export class SignUpComponent implements OnInit{
-  constructor(private http: HttpClient,
-              private global: GlobalMessengerService,
+  constructor(private global: GlobalMessengerService,
               private router: Router,
+              private authService: AuthenticationService,
               private usernameValidator: UsernameValidatorService,
               private titleService: Title) {
   }
@@ -63,12 +64,11 @@ export class SignUpComponent implements OnInit{
   })
 
   submit(){
-    let account = {username: this.signForm.controls.username.value,
-    password: this.signForm.controls.password.value,
-    email: this.signForm.controls.email.value,
-    birthDate: this.signForm.controls.birthDate.value?.toString()}
-    this.http.post<serverResponse>(environment.backendUrl+"/unAuth/signup",account)
-      .subscribe({
+    let account = {username: this.signForm.controls.username.value!,
+    password: this.signForm.controls.password.value!,
+    email: this.signForm.controls.email.value!,
+    birthDate: this.signForm.controls.birthDate.value!.toString()}
+      this.authService.signup(account).subscribe({
         next: value => {
           this.global.toastMessage.next(["alert-success",value.message])
           this.router.navigate([""]);
