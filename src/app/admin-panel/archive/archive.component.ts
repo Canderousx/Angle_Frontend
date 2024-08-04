@@ -43,7 +43,7 @@ export class ArchiveComponent {
   }
 
   getPage(){
-    this.http.get<Report[]>(environment.backendUrl+"/auth/report/getResolved?page="
+    this.http.get<Report[]>(environment.backendUrl+"/report/getResolved?page="
       +this.pageIndex+"&pageSize="+this.pageSize+"&sortBy="+this.sortBy+"&order="+this.order,{observe: "response"})
       .subscribe({
         next: value => {

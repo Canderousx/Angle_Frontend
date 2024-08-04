@@ -48,7 +48,7 @@ export class VideoManagerComponent implements OnInit{
   }
 
   deleteVideo(id: string){
-    this.http.delete<serverResponse>(environment.backendUrl+"/auth/deleteVideo?id="+id).subscribe({
+    this.http.delete<serverResponse>(environment.backendUrl+"/deleteVideo?id="+id).subscribe({
       next: value => {
         this.loadVideos();
         this.global.toastMessage.next(["alert-primary",value.message])

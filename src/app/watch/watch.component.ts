@@ -103,7 +103,7 @@ export class WatchComponent implements OnInit, OnDestroy{
   checkIfRated(){
     this.rated = false;
     if(!!localStorage.getItem("authToken")){
-      this.http.get<boolean[]>(environment.backendUrl+"/auth/checkRated?v="+this.videoId)
+      this.http.get<boolean[]>(environment.backendUrl+"/checkRated?v="+this.videoId)
         .subscribe({
           next: value => {
             if(value.length > 0){
@@ -142,7 +142,7 @@ export class WatchComponent implements OnInit, OnDestroy{
   }
 
   getAuthor(){
-    this.http.get<accountRes>(environment.backendUrl+"/unAuth/videos/getAccount?id="+this.video.authorId)
+    this.http.get<accountRes>(environment.backendUrl+"/unAuth/getAccount?id="+this.video.authorId)
       .subscribe({
         next: value => {
           this.author = value;
@@ -178,7 +178,7 @@ export class WatchComponent implements OnInit, OnDestroy{
   }
 
   rateVideo(rate: boolean){
-      this.http.post(environment.backendUrl+"/auth/rateVideo?v="+this.videoId,rate)
+      this.http.post(environment.backendUrl+"/rateVideo?v="+this.videoId,rate)
         .subscribe({
           next: value => {
             if(rate){

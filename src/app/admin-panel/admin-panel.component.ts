@@ -26,7 +26,7 @@ export class AdminPanelComponent implements OnInit{
   newReports = 0;
 
   checkNewReports(){
-    this.http.get<number>(environment.backendUrl+"/auth/report/howManyUnresolved")
+    this.http.get<number>(environment.backendUrl+"/report/howManyUnresolved")
       .subscribe({
         next: value => {
           this.newReports = value;
@@ -35,7 +35,7 @@ export class AdminPanelComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.http.get<boolean>(environment.backendUrl+"/auth/isAdmin")
+    this.http.get<boolean>(environment.backendUrl+"/isAdmin")
       .subscribe({
         next: value => {
           console.log("IS ADMIN: "+value);

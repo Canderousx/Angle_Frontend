@@ -73,7 +73,7 @@ export class ViewReportComponent implements OnInit{
     if(this.report.type ==="COMMENT"){
       url = "banComment?commentId="+this.report.mediaId;
     }
-    this.http.post<serverResponse>(environment.backendUrl+"/auth/"+url+"&reportId="
+    this.http.post<serverResponse>(environment.backendUrl+"/"+url+"&reportId="
       +this.report.id,this.solveForm.controls.reason.value)
       .subscribe({
         next: value => {
@@ -88,7 +88,7 @@ export class ViewReportComponent implements OnInit{
   }
 
   banAccount(){
-    this.http.post<serverResponse>(environment.backendUrl+"/auth/banAccount"+"?accountId="+this.reported.id+"&reportId="+this.report.id,
+    this.http.post<serverResponse>(environment.backendUrl+"/banAccount"+"?accountId="+this.reported.id+"&reportId="+this.report.id,
       this.solveForm.controls.reason.value)
       .subscribe({
         next: value => {
@@ -104,7 +104,7 @@ export class ViewReportComponent implements OnInit{
   }
 
   cancelReport(){
-    this.http.post<serverResponse>(environment.backendUrl+"/auth/cancelReport?"+"reportId="+this.report.id,
+    this.http.post<serverResponse>(environment.backendUrl+"/cancelReport?"+"reportId="+this.report.id,
       this.solveForm.controls.reason.value)
       .subscribe({
         next: value => {
@@ -147,7 +147,7 @@ export class ViewReportComponent implements OnInit{
     console.log("REPORTER: "+this.report.reporter)
     console.log("MEDIA TYPE: "+this.report.type)
     console.log("MEDIA ID: "+this.report.mediaId);
-    this.http.get<accountRes[]>(environment.backendUrl+"/auth/report/getUsersInvolved?id="+this.report.id)
+    this.http.get<accountRes[]>(environment.backendUrl+"/report/getUsersInvolved?id="+this.report.id)
       .subscribe({
         next: value => {
           this.reporter = value[0];
@@ -164,7 +164,7 @@ export class ViewReportComponent implements OnInit{
         })
     }
     if(this.report.type === 'COMMENT'){
-      this.http.get<Comment>(environment.backendUrl+"/auth/comments/getComment?id="+this.report.mediaId)
+      this.http.get<Comment>(environment.backendUrl+"/comments/getComment?id="+this.report.mediaId)
         .subscribe({
           next: value => {
             this.reportedComment = value;

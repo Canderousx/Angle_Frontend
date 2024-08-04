@@ -44,7 +44,7 @@ export class OwnCasesComponent implements OnInit{
   }
 
   getPage(){
-    this.http.get<Report[]>(environment.backendUrl+"/auth/report/getMyCases?page="
+    this.http.get<Report[]>(environment.backendUrl+"/report/getMyCases?page="
       +this.pageIndex+"&pageSize="+this.pageSize+"&sortBy="+this.sortBy+"&order="+this.order,{observe: "response"})
       .subscribe({
         next: value => {

@@ -46,7 +46,7 @@ export class AvatarChangeComponent {
   uploadAvatar(){
     const formData = new FormData();
     formData.append('file',this.selectedFile,this.selectedFile.name)
-    this.http.post<serverResponse>(environment.backendUrl+"/auth/changeAvatar?id="+this.userId,formData)
+    this.http.post<serverResponse>(environment.backendUrl+"/changeAvatar?id="+this.userId,formData)
       .subscribe({
         next: value => {
           this.global.toastMessage.next(["alert-primary","Avatar has been changed"])

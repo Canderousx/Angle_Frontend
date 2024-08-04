@@ -71,7 +71,7 @@ export class ReportComponent implements OnInit, OnDestroy{
   sendReport(){
     if(this.reportForm.valid){
       let reportData = [this.mediaId,this.reportForm.controls.category.value,this.reportForm.controls.content.value,this.reportedAccountId];
-      this.http.post<serverResponse>(environment.backendUrl+"/auth/report/"+this.type,reportData)
+      this.http.post<serverResponse>(environment.backendUrl+"/report/"+this.type,reportData)
         .subscribe({
           next: value => {
             this.global.toastMessage.next(['alert-primary',value.message])
@@ -88,7 +88,7 @@ export class ReportComponent implements OnInit, OnDestroy{
   }
 
   getCategories() {
-    this.http.get<string[]>(environment.backendUrl+"/auth/report/getCategories").subscribe({
+    this.http.get<string[]>(environment.backendUrl+"/report/getCategories").subscribe({
       next: value => {
         this.categories = value;
       }
@@ -109,7 +109,7 @@ export class ReportComponent implements OnInit, OnDestroy{
            }
          })
     }else{
-       this.http.get<Comment>(environment.backendUrl+"/auth/comments/getComment?id="+this.mediaId)
+       this.http.get<Comment>(environment.backendUrl+"/comments/getComment?id="+this.mediaId)
          .subscribe({next: value => {
            this.reportedComment = value;
            this.reportedAccountId = value.authorId;

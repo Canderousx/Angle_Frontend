@@ -95,7 +95,7 @@ export class UploadMetadataComponent implements OnInit, OnDestroy{
       tags: tags!,
       thumbnail: this.metaThumbnail.controls.thumbnail.value
     }
-    this.http.post<serverResponse>(environment.backendUrl+"/auth/upload/setMetadata?id="+this.videoId,video)
+    this.http.post<serverResponse>(environment.backendUrl+"/upload/setMetadata?id="+this.videoId,video)
       .subscribe({
         next: value => {
           this.global.toastMessage.next(['alert-success','Your video has been saved!'])
@@ -137,7 +137,7 @@ export class UploadMetadataComponent implements OnInit, OnDestroy{
         }
       }
     })
-    this.http.get<thumbnail[]>(environment.backendUrl+"/auth/upload/getThumbnails?v="+this.videoId)
+    this.http.get<thumbnail[]>(environment.backendUrl+"/upload/getThumbnails?v="+this.videoId)
       .subscribe({
         next: value => {
           this.thumbnails = value;

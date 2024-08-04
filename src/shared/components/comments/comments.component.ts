@@ -109,7 +109,7 @@ export class CommentsComponent implements OnInit, OnChanges{
         dislikes: 0,
       }
       this.commentForm.controls.content.reset();
-      this.http.post<Comment[]>(environment.backendUrl+"/auth/comments/addComment",comment,{observe:"response"})
+      this.http.post<Comment[]>(environment.backendUrl+"/comments/addComment",comment,{observe:"response"})
         .subscribe({
           next: value => {
             const totalComments = value.headers.get("totalComments");

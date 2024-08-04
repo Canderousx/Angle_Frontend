@@ -49,7 +49,7 @@ export class UploadComponent {
       this.uploading = true;
       const formData = new FormData();
       formData.append('file', this.selectedFile);
-      this.http.post<serverResponse>(`${environment.backendUrl}/auth/upload`, formData,{observe: 'events', reportProgress: true})
+      this.http.post<serverResponse>(`${environment.backendUrl}/upload`, formData,{observe: 'events', reportProgress: true})
         .pipe(
           tap(event =>{
             if (event.type === HttpEventType.UploadProgress){
@@ -96,7 +96,7 @@ export class UploadComponent {
 
   getThumbnails(){
     this.thumbnails = [];
-    this.http.get<string[]>(environment.backendUrl+"/auth/upload/getThumbnails?v="+this.generatedId)
+    this.http.get<string[]>(environment.backendUrl+"/upload/getThumbnails?v="+this.generatedId)
       .subscribe({
         next: value => {
           this.thumbnails = value;
