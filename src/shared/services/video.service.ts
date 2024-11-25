@@ -4,6 +4,7 @@ import {videoObj} from "../../app/home/home.component";
 import {environment} from "../../environments/environment.development";
 import {serverResponse} from "../../app/app.component";
 import {accountRes} from "./authentication.service";
+import {Page} from "../models/page";
 
 @Injectable({
   providedIn: 'root'
@@ -29,11 +30,11 @@ export class VideoService {
   }
 
   getUserVideos(channelId: string,page: number, pageSize: number) {
-    return this.http.get<videoObj[]>(environment.backendUrl+"/unAuth/videos/getUserVideos?id="+channelId+"&page="+page+"&pageSize="+pageSize,{observe:"response"})
+    return this.http.get<Page<videoObj>>(environment.backendUrl+"/unAuth/videos/getUserVideos?id="+channelId+"&page="+page+"&pageSize="+pageSize,{observe:"response"})
   }
 
   getLatestVideos(pageNum: number){
-    return this.http.get<videoObj[]>(environment.backendUrl+"/unAuth/videos/getAll?page="+pageNum)
+    return this.http.get<Page<videoObj>>(environment.backendUrl+"/unAuth/videos/getAll?page="+pageNum)
   }
 
   getMostPopular(){
@@ -41,7 +42,7 @@ export class VideoService {
   }
 
   getBySubscribers(pageNum:number){
-    return this.http.get<videoObj[]>(environment.backendUrl+"/unAuth/videos/getBySubscribers?page="+pageNum)
+    return this.http.get<Page<videoObj>>(environment.backendUrl+"/unAuth/videos/getBySubscribers?page="+pageNum)
   }
 
   getSimilarVideos(videoId: string){

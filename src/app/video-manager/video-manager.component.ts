@@ -2,10 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {MaterialModule} from "../../shared/modules/material/material.module";
 import {videoObj} from "../home/home.component";
 import {NgForOf, NgIf} from "@angular/common";
-import {HttpClient} from "@angular/common/http";
 import {accountRes, AuthenticationService} from "../../shared/services/authentication.service";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
-import {environment} from "../../environments/environment.development";
 import {Base64ImagePipe} from "../../shared/pipes/base64-image.pipe";
 import {SimpleDatePipe} from "../../shared/pipes/simple-date.pipe";
 import {MouseEnterDirective} from "../../shared/directives/mouse-enter.directive";
@@ -88,7 +86,7 @@ export class VideoManagerComponent implements OnInit{
                   }
                 }
                 if(value.body){
-                  this.accountVideos = value.body;
+                  this.accountVideos = value.body.content;
                 }
               }
             })

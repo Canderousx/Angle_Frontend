@@ -1,7 +1,5 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
 import {Comment} from "../../models/comment";
-import {environment} from "../../../environments/environment.development";
 import {NgForOf, NgIf} from "@angular/common";
 import {MaterialModule} from "../../modules/material/material.module";
 import {Router, RouterLink} from "@angular/router";
@@ -139,7 +137,7 @@ export class CommentsComponent implements OnInit, OnChanges{
             this.totalComments = +totalComments;
           }
           if(value.body){
-            this.comments = value.body;
+            this.comments = value.body.content;
           }
           console.log("COMMENTS: "+this.comments.length);
         }
@@ -153,8 +151,8 @@ export class CommentsComponent implements OnInit, OnChanges{
       .subscribe({
         next: value => {
           if(value.body){
-            console.log("MORE COMMENTS: "+value.body.length)
-            this.comments = this.comments.concat(value.body);
+            console.log("MORE COMMENTS: "+value.body.content.length)
+            this.comments = this.comments.concat(value.body.content);
           }
 
         }

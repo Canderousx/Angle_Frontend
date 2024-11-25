@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
-import {HttpClient} from "@angular/common/http";
 import {accountRes, AuthenticationService} from "../../shared/services/authentication.service";
 import {Subscription} from "rxjs";
 import {MaterialModule} from "../../shared/modules/material/material.module";
@@ -11,7 +10,6 @@ import {NgIf} from "@angular/common";
 import {Base64ImagePipe} from "../../shared/pipes/base64-image.pipe";
 import {FeedComponent} from "../../shared/components/feed/feed.component";
 import {videoObj} from "../home/home.component";
-import {environment} from "../../environments/environment.development";
 import {Title} from "@angular/platform-browser";
 import {SubscribeService} from "../../shared/services/subscribe.service";
 import {VideoService} from "../../shared/services/video.service";
@@ -136,7 +134,7 @@ export class ChannelComponent implements OnInit, OnDestroy{
             }
           }
           if(value.body){
-            this.channelVideos = value.body;
+            this.channelVideos = value.body.content;
           }
         }
       })

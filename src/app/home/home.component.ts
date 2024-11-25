@@ -1,11 +1,9 @@
 import {Component, HostListener, OnInit} from '@angular/core';
-import {tag, videoDetails} from "../upload-metadata/upload-metadata.component";
-import {HttpClient} from "@angular/common/http";
+import {tag} from "../upload-metadata/upload-metadata.component";
 import {GlobalMessengerService} from "../../shared/services/global-messenger.service";
-import {environment} from "../../environments/environment.development";
 import {NgForOf, NgIf} from "@angular/common";
 import {Base64ImagePipe} from "../../shared/pipes/base64-image.pipe";
-import {Router, RouterLink} from "@angular/router";
+import {RouterLink} from "@angular/router";
 import {FeedComponent} from "../../shared/components/feed/feed.component";
 import {MatDivider} from "@angular/material/divider";
 import {Title} from "@angular/platform-browser";
@@ -60,7 +58,7 @@ export class HomeComponent implements OnInit{
   loadLatest(){
     this.videoService.getLatestVideos(this.pageNum).subscribe({
         next: value => {
-          this.latestVideos = this.latestVideos.concat(value);
+          this.latestVideos = this.latestVideos.concat(value.content);
           console.log("Videos received: "+this.latestVideos.length)
           this.loaded = true;
         },
@@ -99,8 +97,8 @@ export class HomeComponent implements OnInit{
     this.loadLatest();
         this.videoService.getBySubscribers(this.subPageNum).subscribe({
         next: value => {
-          console.log("Subs videos received: "+value.length)
-          this.fromSubsVideos = value;
+          console.log("Subs videos received: "+value.content.length)
+          this.fromSubsVideos = value.content;
         }
       })
 

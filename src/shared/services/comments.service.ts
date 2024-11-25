@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {serverResponse} from "../../app/app.component";
 import {environment} from "../../environments/environment.development";
 import {Comment} from "../models/comment";
+import {Page} from "../models/page";
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class CommentsService {
   }
 
   loadComments(videoId: string, page: number, pageSize: number) {
-    return this.http.get<Comment[]>(environment.backendUrl+"/unAuth/videos/getComments?id="+videoId+"&page="+page+"&pageSize="+pageSize,{observe:"response"})
+    return this.http.get<Page<Comment>>(environment.backendUrl+"/unAuth/videos/getComments?id="+videoId+"&page="+page+"&pageSize="+pageSize,{observe:"response"})
   }
 
   getComment(id: string){
