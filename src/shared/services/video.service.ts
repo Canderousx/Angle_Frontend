@@ -70,6 +70,6 @@ export class VideoService {
   }
 
   checkRate(videoId:string){
-    return this.http.get<boolean[]>(environment.backendUrl+"/checkRated?v="+videoId)
+    return this.http.get<number>(environment.backendUrl+"/checkRated?v="+videoId)
   }
 }

@@ -107,11 +107,14 @@ export class WatchComponent implements OnInit, OnDestroy{
       this.videoService.checkRate(this.videoId)
         .subscribe({
           next: value => {
-            if(value.length > 0){
+            if(value !== 0){
               this.rated = true;
-              this.rating = value[0];
-              console.log("RATED: "+this.rated);
-              console.log("RATING: "+this.rating);
+            }
+            if(value === 1){
+              this.rating = true;
+            }
+            if(value === 2){
+              this.rating = false;
             }
           }
         })
